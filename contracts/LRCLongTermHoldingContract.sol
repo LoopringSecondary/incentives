@@ -21,6 +21,7 @@ import 'zeppelin/math/SafeMath.sol';
 import 'zeppelin/math/Math.sol';
 import 'tokens/contracts/Token.sol';
 
+
 /// @title Long-Team Holding Incentive Program
 /// @author Daniel Wang - <daniel@loopring.org>, Kongliang Zhong - <kongliang@loopring.org>.
 /// For more information, please visit https://loopring.org.
@@ -58,19 +59,23 @@ contract LRCLongTermHoldingContract {
 
     /// Emitted for each sucuessful deposit.
     uint public depositId = 0;
-    event Deposit(uint _depositId, address _addr, uint _lrcAmount);
+    event Deposit(uint _depositId, address indexed _addr, uint _lrcAmount);
 
     /// Emitted for each sucuessful deposit.
     uint public withdrawId = 0;
-    event Withdrawal(uint _withdrawId, address _addr, uint _lrcAmount);
+    event Withdrawal(uint _withdrawId, address indexed _addr, uint _lrcAmount);
 
     /// @dev Initialize the contract
     /// @param _lrcTokenAddress LRC ERC20 token address
-    function LRCLongTermHoldingContract(address _lrcTokenAddress) {
-        require(_lrcTokenAddress != 0x0);
+    function LRCLongTermHoldingContract(address _lrcTokenAddress, uint _depositStartTime) {
+        require(_lrcTokenAddress != address(0));
 
         lrcTokenAddress = _lrcTokenAddress;
-        depositStartTime = now;
+        if (_depositStartTime <= 0) {
+            depositStartTime = now; // for testing
+        } else {
+            depositStartTime = _depositStartTime;
+        }
         depositStopTime  = depositStartTime + DEPOSIT_PERIOD;
     }
 
@@ -79,11 +84,11 @@ contract LRCLongTermHoldingContract {
      */
 
     function () payable {
-        if (now <= depositStopTime) {
+        if (now >= depositStartTime && now <= depositStopTime) {
             depositLRC();
         } else if (now > depositStopTime){
             withdrawLRC();
-        }
+        } else revert();
     }
 
     /// @return Current LRC balance.
@@ -94,7 +99,7 @@ contract LRCLongTermHoldingContract {
     /// @dev Deposit LRC.
     function depositLRC() payable {
         require(msg.value == 0);
-        require(now <= depositStopTime);
+        require(now >= depositStartTime && now <= depositStopTime);
         
         var lrcToken = Token(lrcTokenAddress);
         uint lrcAmount = lrcToken
