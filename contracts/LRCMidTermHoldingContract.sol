@@ -175,8 +175,6 @@ contract LRCMidTermHoldingContract {
         lrcReceived += lrcAmount;
         ethSent += ethAmount;
 
-        require(lrcToken.transferFrom(msg.sender, address(this), lrcAmount));
-        require(msg.sender.send(ethAmount));
 
         Deposit(
              depositId++,
@@ -184,6 +182,8 @@ contract LRCMidTermHoldingContract {
              ethAmount,
              lrcAmount
         );
+        require(lrcToken.transferFrom(msg.sender, address(this), lrcAmount));
+        require(msg.sender.send(ethAmount));
     }
 
     /// @dev Withdrawal LRC with ETH transfer.
@@ -209,18 +209,18 @@ contract LRCMidTermHoldingContract {
         lrcSent += lrcAmount;
         ethReceived += ethAmount;
 
-        require(Token(lrcTokenAddress).transfer(msg.sender, lrcAmount));
-
-        uint ethRefund = msg.value - ethAmount;
-        if (ethRefund > 0) {
-            require(msg.sender.send(ethRefund));
-        }
-
         Withdrawal(
              withdrawId++,
              msg.sender,
              ethAmount,
              lrcAmount
         );
+
+        require(Token(lrcTokenAddress).transfer(msg.sender, lrcAmount));
+
+        uint ethRefund = msg.value - ethAmount;
+        if (ethRefund > 0) {
+            require(msg.sender.send(ethRefund));
+        }
     }
 }
