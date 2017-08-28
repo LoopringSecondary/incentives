@@ -145,18 +145,18 @@ contract LRCLongTermHoldingContract {
         Withdrawal(withdrawId++, msg.sender, lrcAmount);
     }
 
-    function calculateBonus(uint _totalBonusRemaining, uint _lrcAmount) public constant returns (uint) {
+    function calculateBonus(uint _totalBonusRemaining, uint _lrcWithdrawalBase) public constant returns (uint) {
         require(lrcDeposited > 0);
         require(_totalBonusRemaining >= 0);
 
         // The bonus is non-linear function to incentivize later withdrawal.
-        // bonus = _totalBonusRemaining * power(_lrcAmount/lrcDeposited, 1.0625)
+        // bonus = _totalBonusRemaining * power(_lrcWithdrawalBase/lrcDeposited, 1.0625)
         return _totalBonusRemaining
-            .div(lrcDeposited.mul(sqrt(sqrt(sqrt(sqrt(lrcDeposited))))))
-            .mul(_lrcAmount.mul(sqrt(sqrt(sqrt(sqrt(_lrcAmount))))));
+            .mul(_lrcWithdrawalBase.mul(sqrt(sqrt(sqrt(sqrt(_lrcWithdrawalBase))))))
+            .div(lrcDeposited.mul(sqrt(sqrt(sqrt(sqrt(lrcDeposited))))));
     }
 
-    function sqrt(uint x) internal returns (uint) {
+    function sqrt(uint x)  returns (uint) {
         uint y = x;
         while( true ) {
             uint z = (y + (x/y))/2;

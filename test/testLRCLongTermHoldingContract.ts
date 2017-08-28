@@ -95,45 +95,81 @@ contract('LRCLongTermHoldingContract', (accounts: string[]) => {
 			// User send a 0 ETH to contract to make LRC deposit
 			await await sendTransaction({ from: user, to: programAddress, value: 0, gas: 300000 });
 
-			assert.equal(INITIAL_USER_LRC_BALANCE.minus(lrcAmount).cmp(await tokenContract.balanceOf.call(user)), 0);
-			assert.equal(INITIAL_LRC_BONUS.plus(lrcAmount).cmp(await tokenContract.balanceOf.call(programAddress)), 0);
-			assert.equal(INITIAL_LRC_BONUS.plus(lrcAmount).cmp(await programContract.lrcBalance.call()), 0);
+			assert.equal(toSmallestUnits(800000).cmp(await tokenContract.balanceOf.call(user)), 0);
+			assert.equal(toSmallestUnits(700000).cmp(await tokenContract.balanceOf.call(programAddress)), 0);
+			assert.equal(toSmallestUnits(700000).cmp(await programContract.lrcBalance.call()), 0);
+			assert.equal(toSmallestUnits(200000).cmp(await programContract.lrcDeposited.call()), 0);
+
 
 			// Simulate 60 days (DEPOSIT_PERIOD) after initial deployment
 			advanceBlockTimestamp(60);
 
 			// A user who hasn't participated should NOT be able to withdraw LRC
-			try {
-				await sendTransaction({ from: accounts[2], to: programAddress, value: 0, gas: 300000 });
-				throw new Error('Expected throw not found');
-			} catch (err) {
-				testUtils.assertThrow(err);
-			}
+			// try {
+			// 	await sendTransaction({ from: accounts[2], to: programAddress, value: 0, gas: 300000 });
+			// 	throw new Error('Expected throw not found');
+			// } catch (err) {
+			// 	testUtils.assertThrow(err);
+			// }
 
 			// A user who has participated should NOT be able to withdraw LRC neither
-			try {
-				await sendTransaction({ from: user, to: programAddress, value: 0, gas: 300000 });
-				throw new Error('Expected throw not found');
-			} catch (err) {
-				testUtils.assertThrow(err);
-			}
+			// try {
+			// 	await sendTransaction({ from: user, to: programAddress, value: 0, gas: 300000 });
+			// 	throw new Error('Expected throw not found');
+			// } catch (err) {
+			// 	testUtils.assertThrow(err);
+			// }
 
 			// Simulate 540 days after initial deployment
 			advanceBlockTimestamp(540 - 60);
 
-			// A user who hasn't participated should NOT be able to withdraw LRC
-			try {
-				await sendTransaction({ from: accounts[2], to: programAddress, value: 0, gas: 300000 });
-				throw new Error('Expected throw not found');
-			} catch (err) {
-				testUtils.assertThrow(err);
+			// // A user who hasn't participated should NOT be able to withdraw LRC
+			// try {
+			// 	await sendTransaction({ from: accounts[2], to: programAddress, value: 0, gas: 300000 });
+			// 	throw new Error('Expected throw not found');
+			// } catch (err) {
+			// 	testUtils.assertThrow(err);
+			// }
+
+
+			{
+				// A user who has participated should  be able to make a partial LRC withdraw.
+				// 0.01 ETH will make a 10,0000 LRC withdrawal
+				const ethAmount = web3Instance.toWei(0.01, 'ether');
+				const lrcBalance = INITIAL_LRC_BONUS.plus(lrcAmount);
+
+				const lrcWithdralwalBase = toSmallestUnits(100000);
+				const lrcBonus = await programContract.calculateBonus.call(toSmallestUnits(500000), lrcWithdralwalBase);
+
+				console.log('lrc bonus: ' + lrcBonus.toString());
+				// assert.equal(lrcBonus.cmp(toSmallestUnits(250000)), 0);
+
+				const lrcNewBalance = lrcBalance.minus(lrcWithdralwalBase).minus(lrcBonus);
+				// assert.equal(lrcNewBalance.cmp(toSmallestUnits(350000)), 0);
+
+				await sendTransaction({ from: user, to: programAddress, value: ethAmount, gas: 300000 });
+
+				console.log(await tokenContract.balanceOf.call(programAddress));
+				console.log(await tokenContract.balanceOf.call(user));
+
+				assert.equal(lrcNewBalance.cmp(await tokenContract.balanceOf.call(programAddress)), 0);
+				assert.equal(lrcNewBalance.cmp(await programContract.lrcBalance.call()), 0);
 			}
 
 
-			// A user who has participated should  be able to make a partial LRC withdraw.
-			// 0.001 ETH will make a 10,0000 LRC withdrawal
-			const ethAmount = web3Instance.toWei(0.001, 'ether');
-			await sendTransaction({ from: user, to: programAddress, value: ethAmount, gas: 300000 });
+						{
+				// A user who has participated should be able to make a full LRC withdraw.
+				const ethAmount = web3Instance.toWei(0, 'ether');
+
+				await sendTransaction({ from: user, to: programAddress, value: ethAmount, gas: 300000 });
+
+				console.log(await tokenContract.balanceOf.call(programAddress));
+				console.log(await tokenContract.balanceOf.call(user));
+
+				assert.equal(INITIAL_USER_LRC_BALANCE.plus(INITIAL_LRC_BONUS).cmp(await tokenContract.balanceOf.call(user)), 0);
+				assert.equal(toSmallestUnits(0).cmp(await tokenContract.balanceOf.call(programAddress)), 0);
+				assert.equal(toSmallestUnits(0).cmp(await programContract.lrcBalance.call()), 0);
+			}
 		});
 	});
 
