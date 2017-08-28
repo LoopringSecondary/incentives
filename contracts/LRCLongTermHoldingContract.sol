@@ -151,7 +151,7 @@ contract LRCLongTermHoldingContract {
         }
 
         uint lrcBonus = getBonus(lrcWithdrawalBase);
-        uint balance = this.lrcBalance();
+        uint balance = lrcBalance();
         uint lrcAmount = balance.min256(lrcWithdrawalBase + lrcBonus);
         
         lrcDeposited -= lrcWithdrawalBase;
@@ -168,7 +168,7 @@ contract LRCLongTermHoldingContract {
     }
 
     function getBonus(uint _lrcWithdrawalBase) constant returns (uint) {
-        return internalCalculateBonus(this.lrcBalance() - lrcDeposited,lrcDeposited, _lrcWithdrawalBase);
+        return internalCalculateBonus(lrcBalance() - lrcDeposited,lrcDeposited, _lrcWithdrawalBase);
     }
 
     function internalCalculateBonus(uint _totalBonusRemaining, uint _lrcDeposited, uint _lrcWithdrawalBase) constant returns (uint) {
