@@ -88,7 +88,7 @@ contract('LRCLongTermHoldingContract', (accounts: string[]) => {
 				assert.equal(bonus.cmp(toSmallestUnits(7419)), 1);
 			}
 
-						{
+			{
 				let totalBonus = toSmallestUnits(10);
 				let deposited = toSmallestUnits(10);
 				const bonus = await programContract.internalCalculateBonus(
@@ -115,10 +115,11 @@ contract('LRCLongTermHoldingContract', (accounts: string[]) => {
 			assert.equal(INITIAL_USER_LRC_BALANCE.cmp(await tokenContract.balanceOf.call(user)), 0);
 			assert.equal(INITIAL_LRC_BONUS.cmp(await tokenContract.balanceOf.call(programAddress)), 0);
 
+			await programContract.start({from: owner});
 
 			// User send a 0 ETH to contract without allowance should cause error to throw.
 			try {
-				await await sendTransaction({ from: user, to: programAddress, value: 0, gas: 300000 });
+				await sendTransaction({ from: user, to: programAddress, value: 0, gas: 300000 });
 				throw new Error('Expected throw not found');
 			} catch (err) {
 				testUtils.assertThrow(err);
@@ -130,7 +131,7 @@ contract('LRCLongTermHoldingContract', (accounts: string[]) => {
 			assert.equal((await tokenContract.allowance.call(user, programAddress)).cmp(lrcAmount), 0);
 
 			// User send a 0 ETH to contract to make LRC deposit
-			await await sendTransaction({ from: user, to: programAddress, value: 0, gas: 300000 });
+			await sendTransaction({ from: user, to: programAddress, value: 0, gas: 300000 });
 
 			assert.equal(toSmallestUnits(800000).cmp(await tokenContract.balanceOf.call(user)), 0);
 			assert.equal(toSmallestUnits(700000).cmp(await tokenContract.balanceOf.call(programAddress)), 0);

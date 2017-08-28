@@ -9,22 +9,22 @@ module.exports = function(deployer, network, accounts) {
     if (network == "live") {
     	var lrcAddress 		= "0xEF68e7C694F40c8202821eDF525dE3782458639f";
     	var ownerAddress 	= "0x9167E8B2EeD2418Fa520C8C036d73ceE6b88aFE9";
-        // deployer.deploy(MidTerm, lrcAddress, ownerAddress, 1504051200); // Wednesday, August 30, 2017 8:00:00 AM GMT+08:00
-        deployer.deploy(LongTerm, lrcAddress, 1504051200); // Wednesday, August 30, 2017 8:00:00 AM GMT+08:00
+        // deployer.deploy(MidTerm, lrcAddress, ownerAddress);
+        deployer.deploy(LongTerm, lrcAddress, ownerAddress);
 
     } else {
     	deployer.deploy(TestERC20Token)
     	.then(function() {
 		  	return deployer.deploy(
 		  		MidTerm, 
-		  		TestERC20Token.address, 
+		  		TestERC20Token.address,
 		  		accounts[0]);
 		})
 		.then(function(){
 			return deployer.deploy(
 				LongTerm, 
 				TestERC20Token.address,
-				0);
+				accounts[0]);
 		});
     }
 };

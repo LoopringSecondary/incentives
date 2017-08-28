@@ -41,6 +41,7 @@ contract LRCLongTermHoldingContract {
     uint public constant WITHDRAWAL_SCALE           = 1E7; // 1ETH for withdrawal of 10,000,000 LRC.
     
     address public lrcTokenAddress  = 0x0;
+    address public owner            = 0x0;
 
     uint public lrcDeposited        = 0;
     uint public depositStartTime    = 0;
@@ -57,6 +58,9 @@ contract LRCLongTermHoldingContract {
      * EVENTS
      */
 
+    /// Emitted when program starts.
+    event Started(uint _time);
+
     /// Emitted for each sucuessful deposit.
     uint public depositId = 0;
     event Deposit(uint _depositId, address indexed _addr, uint _lrcAmount);
@@ -67,28 +71,39 @@ contract LRCLongTermHoldingContract {
 
     /// @dev Initialize the contract
     /// @param _lrcTokenAddress LRC ERC20 token address
-    function LRCLongTermHoldingContract(address _lrcTokenAddress, uint _depositStartTime) {
+    function LRCLongTermHoldingContract(address _lrcTokenAddress, address _owner) {
         require(_lrcTokenAddress != address(0));
+        require(_owner != address(0));
 
         lrcTokenAddress = _lrcTokenAddress;
-        if (_depositStartTime <= 0) {
-            depositStartTime = now; // for testing
-        } else {
-            depositStartTime = _depositStartTime;
-        }
-        depositStopTime  = depositStartTime + DEPOSIT_PERIOD;
+        owner = _owner;
     }
 
     /*
      * PUBLIC FUNCTIONS
      */
 
+    /// @dev start the program.
+    function start() public {
+        require(msg.sender == owner);
+        require(depositStartTime == 0);
+
+        depositStartTime = now;
+        depositStopTime  = depositStartTime + DEPOSIT_PERIOD;
+
+        Started(depositStartTime);
+    }
+
     function () payable {
+        require(depositStartTime > 0);
+
         if (now >= depositStartTime && now <= depositStopTime) {
             depositLRC();
         } else if (now > depositStopTime){
             withdrawLRC();
-        } else revert();
+        } else {
+            revert();
+        }
     }
 
     /// @return Current LRC balance.
@@ -98,6 +113,7 @@ contract LRCLongTermHoldingContract {
 
     /// @dev Deposit LRC.
     function depositLRC() payable {
+        require(depositStartTime > 0);
         require(msg.value == 0);
         require(now >= depositStartTime && now <= depositStopTime);
         
@@ -121,6 +137,7 @@ contract LRCLongTermHoldingContract {
 
     /// @dev Withdrawal LRC.
     function withdrawLRC() payable {
+        require(depositStartTime > 0);
         require(lrcDeposited > 0);
 
         var record = records[msg.sender];
