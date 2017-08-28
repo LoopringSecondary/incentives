@@ -223,4 +223,8 @@ contract LRCMidTermHoldingContract {
             require(msg.sender.send(ethRefund));
         }
     }
+
+    function getLRCAmount(address addr) public constant returns (uint) {
+        return records[addr].lrcAmount;
+    }
 }
