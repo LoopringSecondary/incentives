@@ -1,0 +1,19 @@
+{
+  "package-name": "lrc-incentives",
+  "version": "0.0.1",
+  "description": "Loopring Token-holder incentive programs",
+  "authors": [
+    "Daniel Wang <daniel@loopring.org> (https://loopring.org)"
+  ],
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "contracts",
+    "loopring",
+    "LRC"
+  ],
+  "dependencies": {
+      "tokens": "^0.0.3",
+      "zeppelin": "^1.2.0"
+  }
+}
