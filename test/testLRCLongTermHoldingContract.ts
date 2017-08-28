@@ -65,6 +65,43 @@ contract('LRCLongTermHoldingContract', (accounts: string[]) => {
 
 	});
 
+	describe('internalCalculateBonus method', () => {
+		it('should calculate bonus correctly', async () => {
+
+
+			{
+				let totalBonus = toSmallestUnits(1000000);
+				let deposited = toSmallestUnits(1000000);
+				const bonus = await programContract.internalCalculateBonus(
+					totalBonus, deposited, toSmallestUnits(1000000));
+				assert.equal(toSmallestUnits(1000000).cmp(bonus), 0);
+			}
+
+			{
+				let totalBonus = toSmallestUnits(1000000);
+				let deposited = toSmallestUnits(1000000);
+				const bonus = await programContract.internalCalculateBonus(
+					totalBonus, deposited, toSmallestUnits(10000));
+				// console.log('bonus: ' + bonus + ' ' + toSmallestUnits(7420));
+				// 7.498942093324559E+21
+				assert.equal(bonus.cmp(toSmallestUnits(7420)), -1);
+				assert.equal(bonus.cmp(toSmallestUnits(7419)), 1);
+			}
+
+						{
+				let totalBonus = toSmallestUnits(10);
+				let deposited = toSmallestUnits(10);
+				const bonus = await programContract.internalCalculateBonus(
+					totalBonus, deposited, toSmallestUnits(1));
+				// console.log('bonus: ' + bonus + ' ' + toSmallestUnits(8667, 14));
+				// 7.498942093324559E+16
+				assert.equal(bonus.cmp(toSmallestUnits(8667, 14)), -1);
+				assert.equal(bonus.cmp(toSmallestUnits(8666, 14)), 1);
+			}
+
+		});
+	});
+
 	describe('user', () => {
 
 		async function advanceBlockTimestamp(days: number) {
@@ -95,9 +132,11 @@ contract('LRCLongTermHoldingContract', (accounts: string[]) => {
 			// User send a 0 ETH to contract to make LRC deposit
 			await await sendTransaction({ from: user, to: programAddress, value: 0, gas: 300000 });
 
-			assert.equal(INITIAL_USER_LRC_BALANCE.minus(lrcAmount).cmp(await tokenContract.balanceOf.call(user)), 0);
-			assert.equal(INITIAL_LRC_BONUS.plus(lrcAmount).cmp(await tokenContract.balanceOf.call(programAddress)), 0);
-			assert.equal(INITIAL_LRC_BONUS.plus(lrcAmount).cmp(await programContract.lrcBalance.call()), 0);
+			assert.equal(toSmallestUnits(800000).cmp(await tokenContract.balanceOf.call(user)), 0);
+			assert.equal(toSmallestUnits(700000).cmp(await tokenContract.balanceOf.call(programAddress)), 0);
+			assert.equal(toSmallestUnits(700000).cmp(await programContract.lrcBalance.call()), 0);
+			assert.equal(toSmallestUnits(200000).cmp(await programContract.lrcDeposited.call()), 0);
+
 
 			// Simulate 60 days (DEPOSIT_PERIOD) after initial deployment
 			advanceBlockTimestamp(60);
@@ -130,10 +169,42 @@ contract('LRCLongTermHoldingContract', (accounts: string[]) => {
 			}
 
 
-			// A user who has participated should  be able to make a partial LRC withdraw.
-			// 0.001 ETH will make a 10,0000 LRC withdrawal
-			const ethAmount = web3Instance.toWei(0.001, 'ether');
-			await sendTransaction({ from: user, to: programAddress, value: ethAmount, gas: 300000 });
+			{
+				// A user who has participated should  be able to make a partial LRC withdraw.
+				// 0.01 ETH will make a 10,0000 LRC withdrawal
+				const ethAmount = web3Instance.toWei(0.01, 'ether');
+				const lrcBalance = INITIAL_LRC_BONUS.plus(lrcAmount);
+
+				const lrcWithdralwalBase = toSmallestUnits(100000);
+				const lrcDeposited = await programContract.lrcDeposited.call();
+				const lrcBonus = await programContract.internalCalculateBonus.call(toSmallestUnits(500000), lrcDeposited, lrcWithdralwalBase);
+
+				// console.log('lrc bonus: ' + lrcBonus.toString());
+				const lrcNewBalance = lrcBalance.minus(lrcWithdralwalBase).minus(lrcBonus);
+
+				await sendTransaction({ from: user, to: programAddress, value: ethAmount, gas: 300000 });
+
+				// console.log(await tokenContract.balanceOf.call(programAddress));
+				// console.log(await tokenContract.balanceOf.call(user));
+
+				assert.equal(lrcNewBalance.cmp(await tokenContract.balanceOf.call(programAddress)), 0);
+				assert.equal(lrcNewBalance.cmp(await programContract.lrcBalance.call()), 0);
+			}
+
+
+			{
+				// A user who has participated should be able to make a full LRC withdraw.
+				const ethAmount = web3Instance.toWei(0, 'ether');
+
+				await sendTransaction({ from: user, to: programAddress, value: ethAmount, gas: 300000 });
+
+				// console.log(await tokenContract.balanceOf.call(programAddress));
+				// console.log(await tokenContract.balanceOf.call(user));
+
+				assert.equal(INITIAL_USER_LRC_BALANCE.plus(INITIAL_LRC_BONUS).cmp(await tokenContract.balanceOf.call(user)), 0);
+				assert.equal(toSmallestUnits(0).cmp(await tokenContract.balanceOf.call(programAddress)), 0);
+				assert.equal(toSmallestUnits(0).cmp(await programContract.lrcBalance.call()), 0);
+			}
 		});
 	});
 
