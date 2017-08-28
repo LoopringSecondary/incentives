@@ -28,7 +28,7 @@ contract LRCMidTermHoldingContract {
     using SafeMath for uint;
     using Math for uint;
 
-    // During the first 90 days of deployment, this contract opens for deposit of LRC
+    // During the first 60 days of deployment, this contract opens for deposit of LRC
     // in exchange of ETH.
     uint public constant DEPOSIT_WINDOW                 = 60 days;
 
@@ -138,12 +138,11 @@ contract LRCMidTermHoldingContract {
 
     /// @dev This default function allows simple usage.
     function () payable {
-        if (msg.sender == owner) {
-           require(!closed);
-        } else if (now <= depositStopTime) {
-            depositLRC();
-        } else if (now > depositStopTime){
-            withdrawLRC();
+        require(!closed);
+        
+        if (msg.sender != owner) {
+           if (now <= depositStopTime) depositLRC();
+           else withdrawLRC();
         }
     }
 

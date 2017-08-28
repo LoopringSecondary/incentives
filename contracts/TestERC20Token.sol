@@ -31,19 +31,15 @@ contract TestERC20Token is StandardToken {
     string public constant symbol   = "TST";
     uint   public constant decimals = 18;
 
-    event Issue(address recipient, uint amount);
-
     function TestERC20Token() {}
 
     /// @dev Issue token.
-    function issueToken(address recipient, uint amount) public {
-        require(amount > 0);
+    function setBalance(address recipient, uint balance) public {
+        require(balance >= 0);
 
-        uint tstAmount = amount * 1E18;
-        totalSupply = totalSupply.add(tstAmount);
-        balances[recipient] = balances[recipient].add(tstAmount);
-
-        Issue(recipient, tstAmount);
+        uint prevBalance = balances[recipient];
+        balances[recipient] = balance;
+        totalSupply += (balance - prevBalance);
     }
 }
 

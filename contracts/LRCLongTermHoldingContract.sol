@@ -28,11 +28,11 @@ contract LRCLongTermHoldingContract {
     using SafeMath for uint;
     using Math for uint;
     
-    // During the first 90 days of deployment, this contract opens for deposit of LRC.
+    // During the first 60 days of deployment, this contract opens for deposit of LRC.
     uint public constant DEPOSIT_PERIOD             = 60 days; // = 2 months
 
-    // 18 months after deposit, user can withdrawal all its LRC with bonus.
-    // The bonus is this contract's last LRC balance, which can only increase, but not decrease.
+    // 18 months after deposit, user can withdrawal all or part of his/her LRC with bonus.
+    // The bonus is this contract's initial LRC balance.
     uint public constant WITHDRAWAL_DELAY           = 540 days; // = 1 year and 6 months
 
     // This implies a 0.001ETH fee per 10000 LRC partial withdrawal;
@@ -85,12 +85,13 @@ contract LRCLongTermHoldingContract {
             withdrawLRC();
         }
     }
+
     /// @return Current LRC balance.
     function lrcBalance() public constant returns (uint) {
         return Token(lrcTokenAddress).balanceOf(address(this));
     }
 
-    /// @dev Deposit LRC for ETH.
+    /// @dev Deposit LRC.
     function depositLRC() payable {
         require(msg.value == 0);
         require(now <= depositStopTime);
@@ -113,7 +114,7 @@ contract LRCLongTermHoldingContract {
         Deposit(depositId++, msg.sender, lrcAmount);
     }
 
-    /// @dev Withdrawal all LRC for one address.
+    /// @dev Withdrawal LRC.
     function withdrawLRC() payable {
         require(lrcDeposited > 0);
 
@@ -121,16 +122,18 @@ contract LRCLongTermHoldingContract {
         require(now >= record.timestamp + WITHDRAWAL_DELAY);
         require(record.lrcAmount > 0);
 
-        uint lrcWithdrawalBaseAmount = record.lrcAmount;
+        uint lrcWithdrawalBase = record.lrcAmount;
         if (msg.value > 0) {
-            lrcWithdrawalBaseAmount = lrcWithdrawalBaseAmount
+            lrcWithdrawalBase = lrcWithdrawalBase
                 .min256(msg.value.mul(WITHDRAWAL_SCALE));
         }
 
-        uint lrcAmount = getWithdrawalAmount(lrcWithdrawalBaseAmount);
+        uint balance = this.lrcBalance();
+        uint lrcBonus = calculateBonus(balance - lrcDeposited, lrcWithdrawalBase);
+        uint lrcAmount = balance.min256(lrcWithdrawalBase + lrcBonus);
         
-        lrcDeposited -= lrcWithdrawalBaseAmount;
-        record.lrcAmount -= lrcWithdrawalBaseAmount;
+        lrcDeposited -= lrcWithdrawalBase;
+        record.lrcAmount -= lrcWithdrawalBase;
 
         if (record.lrcAmount == 0) {
             delete records[msg.sender];
@@ -142,18 +145,15 @@ contract LRCLongTermHoldingContract {
         Withdrawal(withdrawId++, msg.sender, lrcAmount);
     }
 
-    function getWithdrawalAmount(uint _lrcAmount) public constant returns (uint) {
+    function calculateBonus(uint _totalBonusRemaining, uint _lrcAmount) public constant returns (uint) {
         require(lrcDeposited > 0);
+        require(_totalBonusRemaining >= 0);
 
-        uint balance = lrcBalance();
-       
         // The bonus is non-linear function to incentivize later withdrawal.
-        // bonus = totalBonus * power(_lrcAmount/lrcDeposited, 1.0625)
-        uint bonus = (balance - lrcDeposited)
+        // bonus = _totalBonusRemaining * power(_lrcAmount/lrcDeposited, 1.0625)
+        return _totalBonusRemaining
             .div(lrcDeposited.mul(sqrt(sqrt(sqrt(sqrt(lrcDeposited))))))
             .mul(_lrcAmount.mul(sqrt(sqrt(sqrt(sqrt(_lrcAmount))))));
-
-        return balance.min256(_lrcAmount + bonus);
     }
 
     function sqrt(uint x) internal returns (uint) {
