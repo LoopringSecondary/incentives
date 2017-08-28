@@ -162,11 +162,11 @@ contract LRCLongTermHoldingContract {
 
     function sqrt(uint x) returns (uint) {
         uint y = x;
-        while( true ) {
-            uint z = (y + (x/y))/2;
-            uint w = (z + (x/z))/2;
-            if( w == y) {
-                if( w < y ) return w;
+        while (true) {
+            uint z = (y + (x / y)) / 2;
+            uint w = (z + (x / z)) / 2;
+            if (w == y) {
+                if (w < y) return w;
                 else return y;
             }
             y = w;
