@@ -3,7 +3,7 @@ import * as BigNumber from 'bignumber.js';
 
 type BNValue = number|string|BigNumber.BigNumber;
 
-export const BNUtil = {
+export const BNUtils = {
   add(numA: BNValue, numB: BNValue): string {
     const a = new BigNumber(numA);
     const b = new BigNumber(numB);
