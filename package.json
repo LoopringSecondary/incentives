@@ -6,14 +6,21 @@
   "directories": {
     "test": "test"
   },
-  "dependencies": {
-    "babel-register": "^6.26.0",
-    "tokens": "^0.0.8",
-    "zeppelin-solidity": "^1.2.0"
+  "devDependencies": {
+    "@types/bignumber.js": "^4.0.2",
+    "@types/node": "^7.0.13",
+    "copyfiles": "^1.2.0",
+    "dirty-chai": "^2.0.0",
+    "typescript": "^2.2.2",
+    "web3-typescript-typings": "0.0.3"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "transpile": "rm -rf ./transpiled; copyfiles ./build/**/* ./transpiled; tsc",
+    "test": "npm run transpile; truffle test",
+    "compile": "rm -rf build/contracts; truffle compile",
+    "migrate": "npm run transpile; truffle migrate",
+    "deploy": "npm run migrate --networkId 100 ",
+    "testrpc": "./testrpc.sh --networkId 100"
   },
   "repository": {
     "type": "git",
@@ -24,5 +31,8 @@
   "bugs": {
     "url": "https://github.com/Loopring/incentives/issues"
   },
-  "homepage": "https://github.com/Loopring/incentives#readme"
+  "homepage": "https://github.com/Loopring/incentives#readme",
+  "dependencies": {
+    "babel-register": "^6.26.0"
+  }
 }
