@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import * as assert from 'assert';
 import * as BigNumber from 'bignumber.js';
 import promisify = require('es6-promisify');
@@ -91,8 +92,24 @@ contract('LRCMidTermHoldingContract', (accounts: string[]) => {
       assert.equal(ethOfSenderIncreasedFixed, ethAmountExpected, "eth amount error");
     });
 
+    it('should not be able to withdraw lrc during withdrawal delay period', async () => {
+      await advanceBlockTimestamp(60);
+      const lrcSaved = await midTerm.getLRCAmount(sender);
+      console.log("lrcSaved:", lrcSaved);
+      const ethAmount = lrcSaved.toNumber()/7500;
+      try {
+        await sendTransaction({from: sender, to: contractAddr, value: ethAmount, gas: 500000});
+        throw new Error("send eth to mid-term contract during withdrawal delay period should hava thrown");
+      } catch (err) {
+        const errMsg = `${err}`;
+        console.log("errMsg:", errMsg);
+        assert(_.includes(errMsg, 'invalid opcode'), `Expected contract to throw, got: ${err}`);
+      }
+    });
+
+
     it('should be able to get lrc back during withdrawal window', async () => {
-      await advanceBlockTimestamp(60 + 180);
+      await advanceBlockTimestamp(180);
       const lrcSaved = await midTerm.getLRCAmount(sender);
       console.log("lrcSaved:", lrcSaved);
       const ethAmount = lrcSaved.toNumber()/7500;
@@ -110,5 +127,21 @@ contract('LRCMidTermHoldingContract', (accounts: string[]) => {
     });
 
   });
+
+  it('should not be able to withdraw lrc after withdrawal window period', async () => {
+    // await advanceBlockTimestamp(90);
+    // const lrcSaved = await midTerm.getLRCAmount(sender);
+    // console.log("lrcSaved:", lrcSaved);
+    // const ethAmount = lrcSaved.toNumber()/7500;
+    try {
+      await sendTransaction({from: sender, to: contractAddr, value: web3.toWei(0.1), gas: 500000});
+      throw new Error("send eth to mid-term contract after withdrawal period should hava thrown");
+    } catch (err) {
+      const errMsg = `${err}`;
+      console.log("errMsg:", errMsg);
+      assert(_.includes(errMsg, 'invalid opcode'), `Expected contract to throw, got: ${err}`);
+    }
+  });
+
 
 })
