@@ -8,9 +8,12 @@ module.exports = function(deployer, network, accounts) {
 	
     if (network == "live") {
     	var lrcAddress 		= "0xEF68e7C694F40c8202821eDF525dE3782458639f";
-    	var ownerAddress 	= "0x9167E8B2EeD2418Fa520C8C036d73ceE6b88aFE9";
-        // deployer.deploy(MidTerm, lrcAddress, ownerAddress);
-        deployer.deploy(LongTerm, lrcAddress, ownerAddress);
+
+    	var midTermOwner 	= "0x9167E8B2EeD2418Fa520C8C036d73ceE6b88aFE9";
+        // deployer.deploy(MidTerm, lrcAddress, midTermOwner);
+
+    	var longTermOwner = "0x21B257a25Ef2FB05714DEAf5026c00Ba2841c7ed";
+        deployer.deploy(LongTerm, lrcAddress, longTermOwner);
 
     } else {
     	deployer.deploy(TestERC20Token)
