@@ -1,7 +1,5 @@
 import * as BigNumber from 'bignumber.js';
-import Web3 = require('web3');
 import promisify = require('es6-promisify');
-const web3Instance: Web3 = web3;
 
 const LRCMidTermHoldingContract = artifacts.require('./LRCMidTermHoldingContract.sol')
 const TestERC20Token = artifacts.require('./TestERC20Token.sol')
@@ -28,21 +26,24 @@ contract('LRCMidTermHoldingContract', (accounts: string[]) => {
     return balance;
   }
 
-  const sendTransaction = promisify(web3Instance.eth.sendTransaction);
+  const sendTransaction = promisify(web3.eth.sendTransaction);
 
   before(async () => {
     testERC20Token = await TestERC20Token.deployed();
     midTerm = await LRCMidTermHoldingContract.deployed();
+    tokenAddr = testERC20Token.address;
+    contractAddr = midTerm.address;
+
     await testERC20Token.setBalance(sender, web3.toWei(20000));
-    await testERC20Token.approve(sender, web3.toWei(1000));
+    await testERC20Token.approve(contractAddr, web3.toWei(1000), {from: sender});
+
+    await web3.eth.sendTransaction({from: owner, to: contractAddr, value: web3.toWei(10000), gas: 100000});
 
     const _tokenAddrInMidTerm = await midTerm.lrcTokenAddress.call();
     const _ownerInMidTerm = await midTerm.owner.call();
     console.log(testERC20Token.address, owner);
     console.log(_tokenAddrInMidTerm, _ownerInMidTerm);
 
-    tokenAddr = testERC20Token.address;
-    contractAddr = midTerm.address;
   });
 
   describe('send eth to LRCMidTermHoldingContract', () => {
@@ -59,7 +60,7 @@ contract('LRCMidTermHoldingContract', (accounts: string[]) => {
       console.log("WITHDRAWAL_DELAY:", WITHDRAWAL_DELAY);
       console.log("WITHDRAWAL_WINDOW:", WITHDRAWAL_WINDOW);
 
-      await await sendTransaction({from: sender, to: contractAddr, value: 0, gas: 500000});
+      await sendTransaction({from: sender, to: contractAddr, value: 0, gas: 500000});
 
       const ethBalance = await getEthBalanceAsync(midTerm.address);
       console.log("ethBalance", ethBalance);
