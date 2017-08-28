@@ -65,6 +65,43 @@ contract('LRCLongTermHoldingContract', (accounts: string[]) => {
 
 	});
 
+	describe('internalCalculateBonus method', () => {
+		it('should calculate bonus correctly', async () => {
+
+
+			{
+				let totalBonus = toSmallestUnits(1000000);
+				let deposited = toSmallestUnits(1000000);
+				const bonus = await programContract.internalCalculateBonus(
+					totalBonus, deposited, toSmallestUnits(1000000));
+				assert.equal(toSmallestUnits(1000000).cmp(bonus), 0);
+			}
+
+			{
+				let totalBonus = toSmallestUnits(1000000);
+				let deposited = toSmallestUnits(1000000);
+				const bonus = await programContract.internalCalculateBonus(
+					totalBonus, deposited, toSmallestUnits(10000));
+				// console.log('bonus: ' + bonus + ' ' + toSmallestUnits(7420));
+				// 7.498942093324559E+21
+				assert.equal(bonus.cmp(toSmallestUnits(7420)), -1);
+				assert.equal(bonus.cmp(toSmallestUnits(7419)), 1);
+			}
+
+						{
+				let totalBonus = toSmallestUnits(10);
+				let deposited = toSmallestUnits(10);
+				const bonus = await programContract.internalCalculateBonus(
+					totalBonus, deposited, toSmallestUnits(1));
+				// console.log('bonus: ' + bonus + ' ' + toSmallestUnits(8667, 14));
+				// 7.498942093324559E+16
+				assert.equal(bonus.cmp(toSmallestUnits(8667, 14)), -1);
+				assert.equal(bonus.cmp(toSmallestUnits(8666, 14)), 1);
+			}
+
+		});
+	});
+
 	describe('user', () => {
 
 		async function advanceBlockTimestamp(days: number) {
@@ -105,31 +142,31 @@ contract('LRCLongTermHoldingContract', (accounts: string[]) => {
 			advanceBlockTimestamp(60);
 
 			// A user who hasn't participated should NOT be able to withdraw LRC
-			// try {
-			// 	await sendTransaction({ from: accounts[2], to: programAddress, value: 0, gas: 300000 });
-			// 	throw new Error('Expected throw not found');
-			// } catch (err) {
-			// 	testUtils.assertThrow(err);
-			// }
+			try {
+				await sendTransaction({ from: accounts[2], to: programAddress, value: 0, gas: 300000 });
+				throw new Error('Expected throw not found');
+			} catch (err) {
+				testUtils.assertThrow(err);
+			}
 
 			// A user who has participated should NOT be able to withdraw LRC neither
-			// try {
-			// 	await sendTransaction({ from: user, to: programAddress, value: 0, gas: 300000 });
-			// 	throw new Error('Expected throw not found');
-			// } catch (err) {
-			// 	testUtils.assertThrow(err);
-			// }
+			try {
+				await sendTransaction({ from: user, to: programAddress, value: 0, gas: 300000 });
+				throw new Error('Expected throw not found');
+			} catch (err) {
+				testUtils.assertThrow(err);
+			}
 
 			// Simulate 540 days after initial deployment
 			advanceBlockTimestamp(540 - 60);
 
-			// // A user who hasn't participated should NOT be able to withdraw LRC
-			// try {
-			// 	await sendTransaction({ from: accounts[2], to: programAddress, value: 0, gas: 300000 });
-			// 	throw new Error('Expected throw not found');
-			// } catch (err) {
-			// 	testUtils.assertThrow(err);
-			// }
+			// A user who hasn't participated should NOT be able to withdraw LRC
+			try {
+				await sendTransaction({ from: accounts[2], to: programAddress, value: 0, gas: 300000 });
+				throw new Error('Expected throw not found');
+			} catch (err) {
+				testUtils.assertThrow(err);
+			}
 
 
 			{
@@ -139,32 +176,30 @@ contract('LRCLongTermHoldingContract', (accounts: string[]) => {
 				const lrcBalance = INITIAL_LRC_BONUS.plus(lrcAmount);
 
 				const lrcWithdralwalBase = toSmallestUnits(100000);
-				const lrcBonus = await programContract.calculateBonus.call(toSmallestUnits(500000), lrcWithdralwalBase);
+				const lrcDeposited = await programContract.lrcDeposited.call();
+				const lrcBonus = await programContract.internalCalculateBonus.call(toSmallestUnits(500000), lrcDeposited, lrcWithdralwalBase);
 
-				console.log('lrc bonus: ' + lrcBonus.toString());
-				// assert.equal(lrcBonus.cmp(toSmallestUnits(250000)), 0);
-
+				// console.log('lrc bonus: ' + lrcBonus.toString());
 				const lrcNewBalance = lrcBalance.minus(lrcWithdralwalBase).minus(lrcBonus);
-				// assert.equal(lrcNewBalance.cmp(toSmallestUnits(350000)), 0);
 
 				await sendTransaction({ from: user, to: programAddress, value: ethAmount, gas: 300000 });
 
-				console.log(await tokenContract.balanceOf.call(programAddress));
-				console.log(await tokenContract.balanceOf.call(user));
+				// console.log(await tokenContract.balanceOf.call(programAddress));
+				// console.log(await tokenContract.balanceOf.call(user));
 
 				assert.equal(lrcNewBalance.cmp(await tokenContract.balanceOf.call(programAddress)), 0);
 				assert.equal(lrcNewBalance.cmp(await programContract.lrcBalance.call()), 0);
 			}
 
 
-						{
+			{
 				// A user who has participated should be able to make a full LRC withdraw.
 				const ethAmount = web3Instance.toWei(0, 'ether');
 
 				await sendTransaction({ from: user, to: programAddress, value: ethAmount, gas: 300000 });
 
-				console.log(await tokenContract.balanceOf.call(programAddress));
-				console.log(await tokenContract.balanceOf.call(user));
+				// console.log(await tokenContract.balanceOf.call(programAddress));
+				// console.log(await tokenContract.balanceOf.call(user));
 
 				assert.equal(INITIAL_USER_LRC_BALANCE.plus(INITIAL_LRC_BONUS).cmp(await tokenContract.balanceOf.call(user)), 0);
 				assert.equal(toSmallestUnits(0).cmp(await tokenContract.balanceOf.call(programAddress)), 0);
