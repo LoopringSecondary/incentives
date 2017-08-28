@@ -42,7 +42,7 @@ contract LRCMidTermHoldingContract {
     uint public constant MAX_LRC_DEPOSIT_PER_ADDRESS    = 150000 ether; // = 20 ETH * 7500
 
     // 7500 LRC for 1 ETH. This is the best token sale rate ever.
-    uint public constant RATE       = 7500; 
+    uint public constant RATE       = 7500;
 
     address public lrcTokenAddress  = 0x0;
     address public owner            = 0x0;
@@ -64,17 +64,17 @@ contract LRCMidTermHoldingContract {
     }
 
     mapping (address => Record) records;
-    
-    /* 
+
+    /*
      * EVENTS
      */
     /// Emitted for each sucuessful deposit.
     uint public depositId = 0;
-    event Deposit(uint _depositId, address _addr, uint _ethAmount, uint _lrcAmount);
+    event Deposit(uint _depositId, address indexed _addr, uint _ethAmount, uint _lrcAmount);
 
     /// Emitted for each sucuessful withdrawal.
     uint public withdrawId = 0;
-    event Withdrawal(uint _withdrawId, address _addr, uint _ethAmount, uint _lrcAmount);
+    event Withdrawal(uint _withdrawId, address indexed _addr, uint _ethAmount, uint _lrcAmount);
 
     /// Emitted when this contract is closed.
     event Closed(uint _ethAmount, uint _lrcAmount);
@@ -82,8 +82,8 @@ contract LRCMidTermHoldingContract {
     /// Emitted when ETH are drained.
     event Drained(uint _ethAmount);
 
-    
-    /// CONSTRUCTOR 
+
+    /// CONSTRUCTOR
     /// @dev Initialize and start the contract.
     /// @param _lrcTokenAddress LRC ERC20 token address
     /// @param _owner Owner of this contract
@@ -107,7 +107,7 @@ contract LRCMidTermHoldingContract {
     function drain(uint ethAmount) public payable {
         require(!closed);
         require(msg.sender == owner);
-        
+
         uint amount = ethAmount.min256(this.balance);
         require(amount > 0);
         require(owner.send(amount));
@@ -119,7 +119,7 @@ contract LRCMidTermHoldingContract {
     function close() public payable {
         require(!closed);
         require(msg.sender == owner);
-        require(now > depositStopTime + WITHDRAWAL_DELAY + WITHDRAWAL_WINDOW); 
+        require(now > depositStopTime + WITHDRAWAL_DELAY + WITHDRAWAL_WINDOW);
 
         uint ethAmount = this.balance;
         if (ethAmount > 0) {
@@ -139,14 +139,14 @@ contract LRCMidTermHoldingContract {
     /// @dev This default function allows simple usage.
     function () payable {
         require(!closed);
-        
+
         if (msg.sender != owner) {
            if (now <= depositStopTime) depositLRC();
            else withdrawLRC();
         }
     }
 
-  
+
     /// @dev Deposit LRC for ETH.
     /// If user send x ETH, this method will try to transfer `x * 100 * 6500` LRC from
     /// the user's address and send `x * 100` ETH to the user.
@@ -183,7 +183,7 @@ contract LRCMidTermHoldingContract {
              msg.sender,
              ethAmount,
              lrcAmount
-        );      
+        );
     }
 
     /// @dev Withdrawal LRC with ETH transfer.
@@ -221,7 +221,6 @@ contract LRCMidTermHoldingContract {
              msg.sender,
              ethAmount,
              lrcAmount
-        ); 
+        );
     }
 }
-

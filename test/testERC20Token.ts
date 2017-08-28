@@ -23,7 +23,7 @@ contract('TestERC20Token', (accounts: string[]) => {
 
   before(async () => {
     console.log("init in before.");
-    console.log("acounts:", accounts);
+    //console.log("acounts:", accounts);
   });
 
   describe('test1', () => {
