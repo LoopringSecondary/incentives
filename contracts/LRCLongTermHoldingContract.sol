@@ -182,7 +182,7 @@ contract LRCLongTermHoldingContract {
             .div(_lrcDeposited.mul(sqrt(sqrt(sqrt(sqrt(_lrcDeposited))))));
     }
 
-    function sqrt(uint x) constant returns (uint) {
+    function sqrt(uint x) internal constant returns (uint) {
         uint y = x;
         while (true) {
             uint z = (y + (x / y)) / 2;
