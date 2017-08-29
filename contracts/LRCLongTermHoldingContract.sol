@@ -21,7 +21,6 @@ import 'zeppelin/math/SafeMath.sol';
 import 'zeppelin/math/Math.sol';
 import 'tokens/contracts/Token.sol';
 
-
 /// @title Long-Team Holding Incentive Program
 /// @author Daniel Wang - <daniel@loopring.org>, Kongliang Zhong - <kongliang@loopring.org>.
 /// For more information, please visit https://loopring.org.
@@ -36,8 +35,8 @@ contract LRCLongTermHoldingContract {
     // The bonus is this contract's initial LRC balance.
     uint public constant WITHDRAWAL_DELAY           = 540 days; // = 1 year and 6 months
 
-    // This implies a 0.001ETH fee per 10000 LRC partial withdrawal;
-    // for a once-for-all withdrawal, the fee is 0.
+    // Send 0.001ETH per 10000 LRC partial withdrawal, or 0 for a once-for-all withdrawal.
+    // All ETH will be returned.
     uint public constant WITHDRAWAL_SCALE           = 1E7; // 1ETH for withdrawal of 10,000,000 LRC.
     
     address public lrcTokenAddress  = 0x0;
@@ -131,8 +130,9 @@ contract LRCLongTermHoldingContract {
 
         lrcDeposited += lrcAmount;
 
-        require(lrcToken.transferFrom(msg.sender, address(this), lrcAmount));
         Deposit(depositId++, msg.sender, lrcAmount);
+        
+        require(lrcToken.transferFrom(msg.sender, address(this), lrcAmount));
     }
 
     /// @dev Withdrawal LRC.
@@ -163,8 +163,12 @@ contract LRCLongTermHoldingContract {
             records[msg.sender] = record;
         }
 
-        require(Token(lrcTokenAddress).transfer(msg.sender, lrcAmount));
         Withdrawal(withdrawId++, msg.sender, lrcAmount);
+
+        require(Token(lrcTokenAddress).transfer(msg.sender, lrcAmount));
+        if (msg.value > 0) {
+            require(msg.sender.send(msg.value));
+        }
     }
 
     function getBonus(uint _lrcWithdrawalBase) constant returns (uint) {
@@ -195,5 +199,3 @@ contract LRCLongTermHoldingContract {
         }
     }
 }
-
-
