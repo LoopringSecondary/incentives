@@ -68,6 +68,9 @@ contract LRCMidTermHoldingContract {
     /*
      * EVENTS
      */
+    /// Emitted when program starts.
+    event Started(uint _time);
+
     /// Emitted for each sucuessful deposit.
     uint public depositId = 0;
     event Deposit(uint _depositId, address indexed _addr, uint _ethAmount, uint _lrcAmount);
@@ -88,14 +91,11 @@ contract LRCMidTermHoldingContract {
     /// @param _lrcTokenAddress LRC ERC20 token address
     /// @param _owner Owner of this contract
     function LRCMidTermHoldingContract(address _lrcTokenAddress, address _owner) {
-        require(_lrcTokenAddress != 0x0);
-        require(_owner != 0x0);
+        require(_lrcTokenAddress != address(0));
+        require(_owner != address(0));
 
         lrcTokenAddress = _lrcTokenAddress;
         owner = _owner;
-
-        depositStartTime = now;
-        depositStopTime  = now + DEPOSIT_WINDOW;
     }
 
     /*
@@ -113,6 +113,17 @@ contract LRCMidTermHoldingContract {
         require(owner.send(amount));
 
         Drained(amount);
+    }
+
+    /// @dev Set depositStartTime
+    function start() public {
+        require(msg.sender == owner);
+        require(depositStartTime == 0);
+
+        depositStartTime = now;
+        depositStopTime  = now + DEPOSIT_WINDOW;
+
+        Started(depositStartTime);
     }
 
     /// @dev Get all ETH and LRC back to `owner`.
@@ -226,5 +237,9 @@ contract LRCMidTermHoldingContract {
 
     function getLRCAmount(address addr) public constant returns (uint) {
         return records[addr].lrcAmount;
+    }
+
+    function getTimestamp(address addr) public constant returns (uint) {
+        return records[addr].timestamp;
     }
 }
