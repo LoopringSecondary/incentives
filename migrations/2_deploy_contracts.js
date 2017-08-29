@@ -12,7 +12,7 @@ module.exports = function(deployer, network, accounts) {
     	var midTermOwner 	= "0x9167E8B2EeD2418Fa520C8C036d73ceE6b88aFE9";
         // deployer.deploy(MidTerm, lrcAddress, midTermOwner);
 
-    	// var longTermOwner = "0x21B257a25Ef2FB05714DEAf5026c00Ba2841c7ed";
+    	var longTermOwner = "0x21B257a25Ef2FB05714DEAf5026c00Ba2841c7ed";
         // deployer.deploy(LongTerm, lrcAddress, longTermOwner);
 
     } else {
