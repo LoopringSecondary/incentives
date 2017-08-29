@@ -50,35 +50,48 @@ contract('LRCMidTermHoldingContract', (accounts: string[]) => {
     const _ownerInMidTerm = await midTerm.owner.call();
   });
 
-  describe('send eth to LRCMidTermHoldingContract', () => {
-    it('should be able to transfer lrc token after approved during deposit window .', async () => {
-      // const closed = await midTerm.closed.call({from: owner});
-      // const depositStartTime = await midTerm.depositStartTime.call();
-      // const depositStopTime = await midTerm.depositStopTime.call();
-      // const WITHDRAWAL_DELAY = await midTerm.WITHDRAWAL_DELAY.call();
-      // const WITHDRAWAL_WINDOW = await midTerm.WITHDRAWAL_WINDOW.call();
+  describe('LRCMidTermHoldingContract: ', () => {
+    it('user should not be able to start program .', async () => {
+      try {
+        await midTerm.start({from: sender, gas: 500000});
+        throw new Error('start by user, not owner.');
+      } catch (err) {
+        //console.log("err:", err);
+        assert(true, 'start by user should have thrown');
+      }
+    });
+
+    it('owner should be able to start program .', async () => {
+      const depositStartTime = await midTerm.depositStartTime.call();
+      assert.equal(depositStartTime.toNumber(), 0, 'depositStartTime should be 0 before start.');
+      await midTerm.start({from: owner, gas: 500000});
+      const depositStartTimeAfter = await midTerm.depositStartTime.call();
+      assert(depositStartTimeAfter.toNumber() > 0, 'depositStartTime should greater than 0 before start.');
+    });
+
+    it('should be able to deposite lrc token after approved during deposit window .', async () => {
+      const closed = await midTerm.closed.call({from: owner});
+      const depositStartTime = await midTerm.depositStartTime.call();
+      const depositStopTime = await midTerm.depositStopTime.call();
+      console.log("depositStartTime:", new Date(depositStartTime.toNumber() * 1000));
+      console.log("depositStopTime:", new Date(depositStopTime.toNumber() * 1000));
+
       const ethBalanceOfContract = await getEthBalanceAsync(contractAddr);
-      console.log("ethBalanceOfContract:", ethBalanceOfContract);
 
       let lrcAmount = web3.toWei(150000);
-      console.log("lrcAmount:", lrcAmount);
+      //console.log("lrcAmount:", lrcAmount);
       const tokenBalanceBefore = await getTokenBalanceAsync(contractAddr);
       const ethBalanceBefore = await getEthBalanceAsync(sender);
-      console.log("ethBalanceBefore: ", ethBalanceBefore);
 
       await testERC20Token.approve(contractAddr, lrcAmount, {from: sender});
       let tx = await sendTransaction({from: sender, to: contractAddr, value: 0, gas: 500000});
       let txRecipient = await getTransactionReceipt(tx);
       let gasPrice: number = web3.eth.gasPrice * Math.pow(10, 9);
-      console.log("gasPrice:", gasPrice);
-      //console.log("txRecipient: ", txRecipient);
-
       const txGas: number = gasPrice * txRecipient.gasUsed;
-      console.log("txGas:", txGas);
 
       const tokenBalanceAfter = await getTokenBalanceAsync(contractAddr);
       const ethBalanceAfter = await getEthBalanceAsync(sender);
-      console.log("ethBalanceAfter:", ethBalanceAfter);
+      //console.log("ethBalanceAfter:", ethBalanceAfter);
 
       const tokenOfContractIncreased: number = tokenBalanceAfter.toNumber() - tokenBalanceBefore.toNumber();
       assert.equal(tokenOfContractIncreased, lrcAmount, "token amount error");
@@ -94,6 +107,7 @@ contract('LRCMidTermHoldingContract', (accounts: string[]) => {
 
     it('should not be able to withdraw lrc during withdrawal delay period', async () => {
       await advanceBlockTimestamp(60);
+
       const lrcSaved = await midTerm.getLRCAmount(sender);
       console.log("lrcSaved:", lrcSaved);
       const ethAmount = lrcSaved.toNumber()/7500;
@@ -110,6 +124,7 @@ contract('LRCMidTermHoldingContract', (accounts: string[]) => {
 
     it('should be able to get lrc back during withdrawal window', async () => {
       await advanceBlockTimestamp(180);
+
       const lrcSaved = await midTerm.getLRCAmount(sender);
       console.log("lrcSaved:", lrcSaved);
       const ethAmount = lrcSaved.toNumber()/7500;
@@ -126,22 +141,18 @@ contract('LRCMidTermHoldingContract', (accounts: string[]) => {
       assert.equal(lrcSavedPrecision, lrcWithdrawedPrecision, "withdraw lrc acmount error");
     });
 
+    it('should not be able to withdraw lrc after withdrawal window period', async () => {
+      await advanceBlockTimestamp(90);
+
+      try {
+        await sendTransaction({from: sender, to: contractAddr, value: web3.toWei(0.1), gas: 500000});
+        throw new Error("send eth to mid-term contract after withdrawal period should hava thrown");
+      } catch (err) {
+        const errMsg = `${err}`;
+        console.log("errMsg:", errMsg);
+        assert(_.includes(errMsg, 'invalid opcode'), `Expected contract to throw, got: ${err}`);
+      }
+    });
+
   });
-
-  it('should not be able to withdraw lrc after withdrawal window period', async () => {
-    // await advanceBlockTimestamp(90);
-    // const lrcSaved = await midTerm.getLRCAmount(sender);
-    // console.log("lrcSaved:", lrcSaved);
-    // const ethAmount = lrcSaved.toNumber()/7500;
-    try {
-      await sendTransaction({from: sender, to: contractAddr, value: web3.toWei(0.1), gas: 500000});
-      throw new Error("send eth to mid-term contract after withdrawal period should hava thrown");
-    } catch (err) {
-      const errMsg = `${err}`;
-      console.log("errMsg:", errMsg);
-      assert(_.includes(errMsg, 'invalid opcode'), `Expected contract to throw, got: ${err}`);
-    }
-  });
-
-
 })
