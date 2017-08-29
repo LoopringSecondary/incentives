@@ -110,7 +110,7 @@ contract LRCMidTermHoldingContract {
 
         uint amount = ethAmount.min256(this.balance);
         require(amount > 0);
-        require(owner.send(amount));
+        owner.transfer(amount);
 
         Drained(amount);
     }
@@ -134,13 +134,13 @@ contract LRCMidTermHoldingContract {
 
         uint ethAmount = this.balance;
         if (ethAmount > 0) {
-          require(owner.send(ethAmount));
+            owner.transfer(ethAmount);
         }
 
         var lrcToken = Token(lrcTokenAddress);
         uint lrcAmount = lrcToken.balanceOf(address(this));
         if (lrcAmount > 0) {
-          require(lrcToken.transfer(owner, lrcAmount));
+            require(lrcToken.transfer(owner, lrcAmount));
         }
 
         closed = true;
@@ -152,8 +152,8 @@ contract LRCMidTermHoldingContract {
         require(!closed);
 
         if (msg.sender != owner) {
-           if (now <= depositStopTime) depositLRC();
-           else withdrawLRC();
+            if (now <= depositStopTime) depositLRC();
+            else withdrawLRC();
         }
     }
 
@@ -188,13 +188,13 @@ contract LRCMidTermHoldingContract {
 
 
         Deposit(
-             depositId++,
-             msg.sender,
-             ethAmount,
-             lrcAmount
-        );
+                depositId++,
+                msg.sender,
+                ethAmount,
+                lrcAmount
+                );
         require(lrcToken.transferFrom(msg.sender, address(this), lrcAmount));
-        require(msg.sender.send(ethAmount));
+        msg.sender.transfer(ethAmount);
     }
 
     /// @dev Withdrawal LRC with ETH transfer.
@@ -221,17 +221,17 @@ contract LRCMidTermHoldingContract {
         ethReceived += ethAmount;
 
         Withdrawal(
-             withdrawId++,
-             msg.sender,
-             ethAmount,
-             lrcAmount
-        );
+                   withdrawId++,
+                   msg.sender,
+                   ethAmount,
+                   lrcAmount
+                   );
 
         require(Token(lrcTokenAddress).transfer(msg.sender, lrcAmount));
 
         uint ethRefund = msg.value - ethAmount;
         if (ethRefund > 0) {
-            require(msg.sender.send(ethRefund));
+            msg.sender.transfer(ethRefund);
         }
     }
 

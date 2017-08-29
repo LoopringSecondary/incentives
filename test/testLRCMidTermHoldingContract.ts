@@ -51,6 +51,17 @@ contract('LRCMidTermHoldingContract', (accounts: string[]) => {
   });
 
   describe('LRCMidTermHoldingContract: ', () => {
+
+    it('owner should be able to withdraw eth before closed', async () => {
+      const ethBalanceOfContractBefore = await getEthBalanceAsync(contractAddr);
+      await midTerm.drain(web3.toWei(10), {from: owner, gas: 100000});
+      const ethBalanceOfContractAfter = await getEthBalanceAsync(contractAddr);
+
+      const subPrecision = (ethBalanceOfContractBefore.toNumber() - ethBalanceOfContractAfter.toNumber()).toPrecision(8);
+      assert.equal('1.0000000e+19', subPrecision);
+    });
+
+
     it('user should not be able to start program .', async () => {
       try {
         await midTerm.start({from: sender, gas: 500000});
