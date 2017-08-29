@@ -38,6 +38,9 @@ contract LRCLongTermHoldingContract {
     // Send 0.001ETH per 10000 LRC partial withdrawal, or 0 for a once-for-all withdrawal.
     // All ETH will be returned.
     uint public constant WITHDRAWAL_SCALE           = 1E7; // 1ETH for withdrawal of 10,000,000 LRC.
+
+    // Ower can drain all remaining LRC after 3 years.
+    uint public constant DRAIN_DELAY                = 1080 days; // = 3 years.
     
     address public lrcTokenAddress  = 0x0;
     address public owner            = 0x0;
@@ -59,6 +62,9 @@ contract LRCLongTermHoldingContract {
 
     /// Emitted when program starts.
     event Started(uint _time);
+
+    /// Emitted when all LRC are drained.
+    event Drained(uint _lrcAmount);
 
     /// Emitted for each sucuessful deposit.
     uint public depositId = 0;
@@ -91,6 +97,20 @@ contract LRCLongTermHoldingContract {
         depositStopTime  = depositStartTime + DEPOSIT_PERIOD;
 
         Started(depositStartTime);
+    }
+
+
+    /// @dev drain LRC.
+    function drain() public {
+        require(msg.sender == owner);
+        require(depositStartTime > 0 && now >= depositStartTime + DRAIN_DELAY);
+
+        uint balance = lrcBalance();
+        require(balance > 0);
+
+        require(Token(lrcTokenAddress).transfer(owner, balance));
+
+        Drained(balance);
     }
 
     function () payable {
@@ -167,7 +187,7 @@ contract LRCLongTermHoldingContract {
 
         require(Token(lrcTokenAddress).transfer(msg.sender, lrcAmount));
         if (msg.value > 0) {
-            require(msg.sender.send(msg.value));
+            msg.sender.transfer(msg.value);
         }
     }
 
