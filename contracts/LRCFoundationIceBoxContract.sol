@@ -96,7 +96,7 @@ contract LRCFoundationIceboxContract {
             lrcWithdrawn += lrcAmount;
 
             Withdrawal(withdrawId++, lrcAmount);
-            token.transfer(owner, lrcAmount);
+            require(token.transfer(owner, lrcAmount));
         }
     }
 
