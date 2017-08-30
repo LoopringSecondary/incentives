@@ -9,11 +9,11 @@
 ## 合约
 该计划通过以太坊智能合约（smart-contract）实现，合约地址为：
 
-    0x239dE3a0D6ca5f21601f83327eA2174225eB7156
+    0x7B22713f2e818fad945AF5a3618a2814F102cbe0
 
 该地址对应的ENS地址为：[icebox.lrctoken.eth](https://etherscan.io/address/icebox.lrctoken.eth)。我们的合约经过[etherscan.io](https://etherscan.io/address/icebox.lrctoken.eth#code)做了[源代码认证](https://etherscan.io/address/icebox.lrctoken.eth#code)，我们期待社区做进一步review。**由于智能合约的强制限制，这部分20%的LRC没有任何可能被提前释放流通。**
 
 ### 查看锁仓的LRC额度
 
-您可以通过这个URL查看当前被锁仓的基金会LRC额度：[https://etherscan.io/token/0xEF68e7C694F40c8202821eDF525dE3782458639f?a=0x239dE3a0D6ca5f21601f83327eA2174225eB7156](https://etherscan.io/token/0xEF68e7C694F40c8202821eDF525dE3782458639f?a=0x239dE3a0D6ca5f21601f83327eA2174225eB7156)。
+您可以通过这个URL查看当前被锁仓的基金会LRC额度：[https://etherscan.io/token/0xEF68e7C694F40c8202821eDF525dE3782458639f?a=0x7B22713f2e818fad945AF5a3618a2814F102cbe0](https://etherscan.io/token/0xEF68e7C694F40c8202821eDF525dE3782458639f?a=0x7B22713f2e818fad945AF5a3618a2814F102cbe0)。
 
