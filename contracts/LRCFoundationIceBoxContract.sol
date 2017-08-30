@@ -18,7 +18,6 @@
 pragma solidity ^0.4.11;
 
 import 'zeppelin/math/SafeMath.sol';
-import 'zeppelin/math/Math.sol';
 import 'tokens/contracts/Token.sol';
 
 /// @title LRC Foundation Icebox Program
@@ -30,7 +29,6 @@ import 'tokens/contracts/Token.sol';
 
 contract LRCFoundationIceboxContract {
     using SafeMath for uint;
-    using Math for uint;
     
     uint public constant FREEZE_PERIOD = 720 days; // = 2 years
 
@@ -109,10 +107,12 @@ contract LRCFoundationIceboxContract {
      */
 
     function calculateLRCUnlockAmount(uint _now, uint _balance) internal returns (uint lrcAmount) {
-        return (_now - startTime - FREEZE_PERIOD)
+        uint unlockable = (_now - startTime - FREEZE_PERIOD)
             .div(30 days)
-            .mul(lrcUnlockPerMonth)
-            .min256(_balance);
+            .mul(lrcUnlockPerMonth);
+
+        if (unlockable > _balance) return _balance;
+        else return unlockable;
     }
 
 }
