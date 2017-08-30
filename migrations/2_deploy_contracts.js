@@ -2,6 +2,7 @@
 var TestERC20Token 	= artifacts.require("./TestERC20Token.sol")
 var MidTerm 		= artifacts.require("./LRCMidTermHoldingContract.sol")
 var LongTerm 		= artifacts.require("./LRCLongTermHoldingContract.sol")
+var Icebox   		= artifacts.require("./LRCFoundationIceboxContract.sol")
 
 module.exports = function(deployer, network, accounts) {
 	console.log("network: " + network);
@@ -14,6 +15,9 @@ module.exports = function(deployer, network, accounts) {
 
     	var longTermOwner = "0x21B257a25Ef2FB05714DEAf5026c00Ba2841c7ed";
         // deployer.deploy(LongTerm, lrcAddress, longTermOwner);
+
+        var iceboxOwner = "0x9b9211a2ce4eEE9c5619d54E5CD9f967A68FBE23";
+        // deployer.deploy(Icebox, lrcAddress, iceboxOwner);
 
     } else {
     	deployer.deploy(TestERC20Token)

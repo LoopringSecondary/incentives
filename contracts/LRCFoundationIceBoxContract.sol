@@ -36,7 +36,7 @@ contract LRCFoundationIceboxContract {
     address public owner            = 0x0;
 
     uint public lrcInitialBalance   = 0;
-    uint public lrcUnlocked         = 0;
+    uint public lrcWithdrawn         = 0;
     uint public lrcUnlockPerMonth   = 0;
     uint public startTime           = 0;
 
@@ -93,10 +93,9 @@ contract LRCFoundationIceboxContract {
 
         uint lrcAmount = calculateLRCUnlockAmount(now, balance);
         if (lrcAmount > 0) {
-            lrcUnlocked += lrcAmount;
+            lrcWithdrawn += lrcAmount;
 
             Withdrawal(withdrawId++, lrcAmount);
-
             token.transfer(owner, lrcAmount);
         }
     }
@@ -109,7 +108,9 @@ contract LRCFoundationIceboxContract {
     function calculateLRCUnlockAmount(uint _now, uint _balance) internal returns (uint lrcAmount) {
         uint unlockable = (_now - startTime - FREEZE_PERIOD)
             .div(30 days)
-            .mul(lrcUnlockPerMonth);
+            .mul(lrcUnlockPerMonth) - lrcWithdrawn;
+
+        require(unlockable > 0);
 
         if (unlockable > _balance) return _balance;
         else return unlockable;
