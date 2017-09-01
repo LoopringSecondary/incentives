@@ -1,6 +1,6 @@
 # LRC Lont-term Incentive Program
 
-Loopring Foundation will launch“**LRC two Incentive Programs**”，in order to motivate mid-term and long-term investors in the community.
+Loopring Foundation will launch“**Two Incentive Programs**”in order to motivate mid-term and long-term investors in the community.
 
 ## About Loopring Protocol
 Loopring Protocol is a a decentralized automated execution system that trades across the crypto-token exchanges, shielding users from counterparty risk and reduce the cost of trading. By essentially rising the liquidity of cryptocurrencies, we are building the financial system of the future. Please visit our website for more info[https://loopring.org](https://loopring.org).
@@ -14,9 +14,9 @@ The program will be executed through smart-contract on Ethereum network. Smart c
 
     0x239dE3a0D6ca5f21601f83327eA2174225eB7156
 
-该地址对应的ENS地址为：[longterm.lrctoken.eth](https://etherscan.io/address/longterm.lrctoken.eth)。
+ENS Address：[longterm.lrctoken.eth](https://etherscan.io/address/longterm.lrctoken.eth)。
     
-我们的合约经过[etherscan.io](https://etherscan.io/address/longterm.lrctoken.eth#code)做了[源代码认证](https://etherscan.io/address/longterm.lrctoken.eth#code)，我们期待社区做深度review。**该计划完全是自愿参与，一切以代码为准，请参与者意识到合约代码的风险**。
+The smart contract has been [etherscan.io](https://etherscan.io/address/longterm.lrctoken.eth#code)[Source Code Verified](https://etherscan.io/address/longterm.lrctoken.eth#code)，We are looking for community volunteers to help to further review。**The participartion is voluntarily for the program in accordance with smart contract code. There are risks associated with the smart contract.**。
 
 
 ### Rule
