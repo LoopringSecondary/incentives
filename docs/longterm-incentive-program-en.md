@@ -1,4 +1,4 @@
-# LRC Lont-term Incentive Program
+# LRC Long-term Incentive Program
 
 Loopring Foundation will launch“**Two Incentive Programs**”in order to motivate mid-term and long-term investors in the community.
 
@@ -20,23 +20,23 @@ The smart contract has been [etherscan.io](https://etherscan.io/address/longterm
 
 
 ### Rule
-该计划的具体规则反映在代码里，白话文解释如下：
 
-- 该计划激活日期为2017年8月30日下午六点。
-- 路印基金会将在激活日期前转入500万LRC到该合约的地址，作为参与者的奖励；后续考虑参与金额，可能还会增加奖励数额。
-- 所有通过直接转账的方式转给激励计划合约的LRC都会作为奖励的一部分，无法取出。如果您不想无偿贡献LRC，请不要直接转账任何LRC给合约地址，切记；如果您真的直接转账LRC到激励计划，我们没有能力帮您取出。
-- 计划激活后，有60天的窗口期允许用户参与；窗口期关闭后，无法参与，但基金会和任何人可以继续贡献LRC奖励。
-- 参与时间点之后的18个月内，该地址转入的LRC被冻结，无法取出。18个月后的任何时候，参与者都可以将LRC和奖励部分或者全部取出。该计划的强制结束日期是开始后的三年，三年后还没提现的LRC我们认为是私钥密码丢失，我们会在三年后将剩余LRC全部取出充公。
-- 每个地址根据参与的时间点不一样，最早可以提LRC的时间点也不一样，越早参与，可越早提现。
-- LRC奖励并不是平均分配，是根据提现顺序而定。取出同样的LRC，先提现的奖励会少，后提现的奖励会多。这一点后面有详细解读。
-- 参与和提现没任何费用。部分提取时，需要为合约支付很少的LRC来指定要提现的LRC数量，地先后ETH也和LRC一并返还给用户。这一点后面有详细说明。
-- 该计划没有上限，任何人都可以参与（基金会成员除外）。
 
-具体规则以智能合约代码为基准，本文解释如果有偏差，基金会不承担任何责任。您参与就表明您充分了解合约代码。该计划开始后的执行是全自动的，基金会除了提供本说明文档外，不会提供其它技术支持。对ERC20不懂的参与者请在社区寻求帮助，但不要把私钥或密码告诉不信任的人，不要让人代为参与。
+- Long-term program started at 2017.Aug.30 18:00pm (Beijing time)
+- Loopring Foundation have deposited 5,000,000 LRC bonus into the smart contract. Foundation may add more LRC tokens into program. 
+- Do not transfer LRC from your own wallet to the program address directly. You must authorize it first. Please follow the step A carefully. Foundation will not be able to get your token back if the reason is your misconduction. 
+- Long-term program lasts 60 days. Any LRC deposit after 60 days will donate to the Foundation.
+- Participator cannot withdraw LRC within 18 months. Withdraw period will open from the 18th month to 36th month. Participator can fully or partially withdraw the LRC token within this period of time. After the withdraw period ends. All the LRC tokens in the program address will be considered as a donation to the foudnation. 
+- Program activates after you transfer the LRC to smart contract address.
+- The interst rate is depending on your deposit time. The longer time you deposit, the higher interest rate you receive.
+- Participation is free of charge. 
+- Program is not capped, everyone can participate expect Foundation members.
+
+Foundation reserve the right of final interpretation. This instruction is imperfect. Please review the smart contract code before your participation.
 
 ## Bouns Distribution
 
-We estimate 100 million LRC tokens will participate the long-term program. Hypothetically total amount is 100 million LRC tokens, 那么整体的奖励为：**500万/1亿 = 5%**。为了鼓励大家长期持有，我们的奖励并非线性平均分配，而是越晚提现，奖励比例越大。从下面图形可以看出，前2/3提现的奖励比例会小于平局值，后1/3提现的奖励比例会大于平均值。奖励比例和参与时间点无关，和提现时间也无关，和提现的先后顺序有关。
+We estimate 100 million LRC tokens will participate the long-term program. Hypothetically total amount is 100 million LRC tokens, Thus the average interest rate will be：**5,000,000/100,000,000 = 5%**。In order to motivate long-term investors，the interest rate varies with the legth of the time. The longer time, the higher rate. (Diagram Below)
 
 ![](images/roi.jpg)
 
