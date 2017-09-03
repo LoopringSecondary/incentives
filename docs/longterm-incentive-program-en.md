@@ -48,8 +48,8 @@ Note：Interest rate will depend on the amount of your withdraw accordingly.
 
 Two Steps to participate. 
 
-1. Use LRC smart contract to authorize ERC20 - Do not send LRC indrectly from your crypto wallet or crypto-exchange.Refer to**Step A**。
-2. Sned 0 Ether to incentive program's smart contract address. Refer to**Step C**。
+1. Use LRC smart contract to authorize ERC20 - Do not send LRC indrectly from your crypto wallet or crypto-exchange.Refer to **Step A**。
+2. Sned 0 Ether to incentive program's smart contract address. Refer to **Step C**。
 
 ### LRC Withdraw
 
