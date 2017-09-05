@@ -16,7 +16,7 @@ The program will be executed through smart-contract on Ethereum network. Smart c
 
 ENS Address：[longterm.lrctoken.eth](https://etherscan.io/address/longterm.lrctoken.eth)。
     
-The smart contract has been [etherscan.io](https://etherscan.io/address/longterm.lrctoken.eth#code)[Source Code Verified](https://etherscan.io/address/longterm.lrctoken.eth#code)，We are looking for community volunteers to help to further review。**The participartion is voluntarily for the program in accordance with smart contract code. There are risks associated with the smart contract.**。
+The smart contract has been [etherscan.io](https://etherscan.io/address/longterm.lrctoken.eth#code)[Source Code Verified](https://etherscan.io/address/longterm.lrctoken.eth#code)，We are looking for community volunteers to help for further review。**The participation is voluntarily for the program in accordance with smart contract code. There are risks associated with the smart contract.**。
 
 
 ### Rule
@@ -26,17 +26,17 @@ The smart contract has been [etherscan.io](https://etherscan.io/address/longterm
 - Loopring Foundation have deposited 5,000,000 LRC bonus into the smart contract. Foundation may add more LRC tokens into program. 
 - Do not transfer LRC from your own wallet to the program address directly. You must authorize it first. Please follow the step A carefully. Foundation will not be able to get your token back if the reason is your misconduction. 
 - Long-term program lasts 60 days. Any LRC deposit after 60 days will donate to the Foundation.
-- Participator cannot withdraw LRC within 18 months. Withdraw period will open from the 18th month to 36th month. Participator can fully or partially withdraw the LRC token within this period of time. After the withdraw period ends. All the LRC tokens in the program address will be considered as a donation to the foudnation. 
+- Participator cannot withdraw LRC within 18 months. Withdraw period will open from the 18th month to 36th month. Participator can fully or partially withdraw the LRC token within this period of time. After the withdraw period ends. All the LRC tokens in the program address will be considered as a donation to the foundation. 
 - Program activates after you transfer the LRC to smart contract address.
-- The interst rate is depending on your deposit time. The longer time you deposit, the higher interest rate you receive.
+- The interest rate is depending on your deposit time. The longer time you deposit, the higher interest rate you receive.
 - Participation is free of charge. 
-- Program is not capped, everyone can participate expect Foundation members.
+- Program is not capped, everyone can participate except Foundation members.
 
-Foundation reserve the right of final interpretation. This instruction is imperfect. Please review the smart contract code before your participation.
+Foundation reserves the right of final interpretation. This instruction is imperfect. Please review the smart contract code before your participation.
 
 ## Bouns Distribution
 
-We estimate 100 million LRC tokens will participate the long-term program. Hypothetically total amount is 100 million LRC tokens, Thus the average interest rate will be：**5,000,000/100,000,000 = 5%**。In order to motivate long-term investors，the interest rate varies with the legth of the time. The longer time, the higher rate. (Diagram Below)
+We estimate 100 million LRC tokens will participate the long-term program. Hypothetically total amount is 100 million LRC tokens, thus the average interest rate will be：**5,000,000/100,000,000 = 5%**。In order to motivate long-term investors，the interest rate varies with the legth of the time. The longer time, the higher rate. (Diagram Below)
 
 ![](images/roi.jpg)
 
