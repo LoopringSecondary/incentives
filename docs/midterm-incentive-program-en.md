@@ -15,19 +15,19 @@ The program will be executed through smart-contract on Ethereum network. Smart c
 
 ENS Address：[midterm.lrctoken.eth](https://etherscan.io/address/midterm.lrctoken.eth)。
     
-The smart contract has been[etherscan.io](https://etherscan.io/address/midterm.lrctoken.eth#code) [Verifed] (https://etherscan.io/address/midterm.lrctoken.eth#code)，We are looking for community volunteers to help to further review。The participartion is voluntarily for the program in accordance with smart contract code. There are risks associated with the smart contract.
+The smart contract has been[etherscan.io](https://etherscan.io/address/midterm.lrctoken.eth#code) [Verifed] (https://etherscan.io/address/midterm.lrctoken.eth#code)，We are looking for community volunteers to help for further review。The participation is voluntarily for the program in accordance with smart contract code. There are risks associated with the smart contract.
 
 ### Rule
 
-- Mid-term program started at 2017.Aug.30 18:00pm (Beijing time)and last 60 days.Participator can exchange LRC to ETH with a fixed rate of 7500LRC:1ETH.
+- Mid-term program started at 2017.Aug.30 18:00pm (Beijing time)and last 60 days. Participator can exchange LRC to ETH with a fixed rate of 7500LRC:1ETH.
 - Loopring Foundation have deposited 5000ETH（Foundation could deposit more ETH.）。
 - Do not transfer LRC from your own wallet to the program address directly. You must authorize it first. Please follow the step A carefully. Foundation will not be able to get your token back if the reason is your misconduction.
-- Participator cannot withdraw LRC within 6 months. Withdraw period will open from the 6th month to 9th month. For redeem, just send ETH from your ERC20 supproted wallet to the program smart contract address. LRC you will be return to you once ETH receive. After the withdraw period ends. All the LRC tokens in the program address will be considered as a donation to the foudnation.
+- Participator cannot withdraw LRC within 6 months. Withdraw period will open from the 6th month to 9th month. For redeem, just send ETH from your ERC20 supproted wallet to the program smart contract address. LRC you will be return to you once ETH receive. After the withdraw period ends. All the LRC tokens in the program address will be considered as a donation to the foundation.
 - Program activates after you transfer the LRC to smart contract address. The faster you start to participate, the earlier you can you withdraw.
 - Each address can deposit MAX. 150,000LRC & will receive 20ETH，Participation is free of charge.
 - Everyone can participate expect Foundation members.
 
-Foundation reserve the right of final interpretation. This instruction is imperfect. Please review the smart contract code before your participation.
+Foundation reserves the right of final interpretation. This instruction is imperfect. Please review the smart contract code before your participation.
 
 ## Participation
 
