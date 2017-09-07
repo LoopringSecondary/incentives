@@ -42,7 +42,14 @@ contract BatchTransferContract {
         require(investors.length > 0);
         require(investors.length == ethAmounts.length);
 
+        uint total = 0;
         for (uint i = 0; i < investors.length; i++) {
+            total += ethAmounts[i];
+        }
+
+        require(total <= this.balance);
+
+        for (i = 0; i < investors.length; i++) {
             if (ethAmounts[i] > 0) {
                 investors[i].transfer(ethAmounts[i]);
             }
