@@ -3,13 +3,13 @@ import * as assert from 'assert';
 import * as BigNumber from 'bignumber.js';
 import promisify = require('es6-promisify');
 
-const RefundContract = artifacts.require('./RefundContract.sol')
+const BatchTransferContract = artifacts.require('./BatchTransferContract.sol')
 
-contract('RefundContract', (accounts: string[]) => {
+contract('BatchTransferContract', (accounts: string[]) => {
 
   const owner = accounts[0];
 
-  let refundContract: any;
+  let  batchTransferContract: any;
   let contractAddr: string;
 
   const getEthBalanceAsync = async (addr: string) => {
@@ -26,8 +26,8 @@ contract('RefundContract', (accounts: string[]) => {
     // const ethBalanceOfOwner = await getEthBalanceAsync(owner);
     // console.log("ethBalanceOfOwner", ethBalanceOfOwner);
 
-    refundContract = await RefundContract.deployed();
-    contractAddr = refundContract.address;
+     batchTransferContract = await BatchTransferContract.deployed();
+    contractAddr =  batchTransferContract.address;
     //console.log("contractAddr:", contractAddr);
     await sendTransaction({from: owner, to: contractAddr, value: web3.toWei(1000), gas: 900000});
     const ethBalanceOfContract = await getEthBalanceAsync(contractAddr);
@@ -38,7 +38,7 @@ contract('RefundContract', (accounts: string[]) => {
 
     it('should be able to drain anytime', async () => {
       const ethBalanceOfContractBefore = await getEthBalanceAsync(contractAddr);
-      await refundContract.drain(web3.toWei(10), {from: owner, gas: 100000});
+      await  batchTransferContract.drain(web3.toWei(10), {from: owner, gas: 100000});
       const ethBalanceOfContractAfter = await getEthBalanceAsync(contractAddr);
 
       const subPrecision = (ethBalanceOfContractBefore.toNumber() - ethBalanceOfContractAfter.toNumber()).toPrecision(8);
@@ -52,7 +52,7 @@ contract('RefundContract', (accounts: string[]) => {
 
       const ethBalanceBefore0 = await getEthBalanceAsync(investors[0]);
       const ethBalanceBefore1 = await getEthBalanceAsync(investors[1]);
-      await refundContract.batchRefund(investors, [web3.toWei(2), web3.toWei(5)], {from: owner, gas: 1000000});
+      await  batchTransferContract.batchRefund(investors, [web3.toWei(2), web3.toWei(5)], {from: owner, gas: 1000000});
 
       const ethBalanceAfter0 = await getEthBalanceAsync(investors[0]);
       const ethBalanceAfter1 = await getEthBalanceAsync(investors[1]);
