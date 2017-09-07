@@ -23,13 +23,13 @@ import 'zeppelin/math/Math.sol';
 /// @title Loopring Refund Program
 /// @author Kongliang Zhong - <kongliang@loopring.org>.
 /// For more information, please visit https://loopring.org.
-contract RefundContract {
+contract BatchTransferContract {
     using SafeMath for uint;
     using Math for uint;
 
     address public owner;
 
-    function RefundContract(address _owner) public {
+    function BatchTransferContract(address _owner) public {
         owner = _owner;
     }
 
@@ -43,8 +43,6 @@ contract RefundContract {
         require(investors.length == ethAmounts.length);
 
         for (uint i = 0; i < investors.length; i++) {
-            if (this.balance <= 0) break;
-
             if (ethAmounts[i] > 0) {
                 investors[i].transfer(ethAmounts[i]);
             }
@@ -55,8 +53,9 @@ contract RefundContract {
         require(msg.sender == owner);
 
         uint amount = ethAmount.min256(this.balance);
-        require(amount > 0);
-        owner.transfer(amount);
+        if (amount > 0) {
+          owner.transfer(amount);
+        }
     }
 
 }

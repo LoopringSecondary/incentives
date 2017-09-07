@@ -3,7 +3,7 @@ var TestERC20Token  = artifacts.require("./TestERC20Token.sol")
 var MidTerm         = artifacts.require("./LRCMidTermHoldingContract.sol")
 var LongTerm        = artifacts.require("./LRCLongTermHoldingContract.sol")
 var Icebox          = artifacts.require("./LRCFoundationIceboxContract.sol")
-var Refund          = artifacts.require("./RefundContract.sol")
+var BatchTransfer   = artifacts.require("./BatchTransferContract.sol")
 
 module.exports = function(deployer, network, accounts) {
   console.log("network: " + network);
@@ -21,7 +21,7 @@ module.exports = function(deployer, network, accounts) {
     // deployer.deploy(Icebox, lrcAddress, iceboxOwner);
 
   } else {
-    deployer.deploy(Refund, accounts[0]);
+    deployer.deploy(BatchTransfer, accounts[0]);
 
     deployer.deploy(TestERC20Token)
       .then(function() {
