@@ -1,4 +1,4 @@
-# LRC Mid-term Incentive Program
+# LRC Mid-term Incentive Program (Suspended)
 
 Loopring Foundation will launch“Two Incentive Programs”in order to motivate mid-term and long-term investors in the community.
 
