@@ -1,4 +1,4 @@
-#LRC Long-term Incentive Program
+# LRC Long-term Incentive Program
 
 The Loopring Foundation offers two interest-earning incentive programs in order to encourage long-term and mid-term investment in Loopring and its community.
 
@@ -9,15 +9,15 @@ Each plan requires investors to deposit their LRC tokens into an Ethereum smart 
 
 > **[TEMPORARILY SUSPENDED]** The [Mid-term Incentive Program](http://incentives.loopring.org/midterm-incentive-program-en.html) has a minimum holding period of 6 months. Tokens may be withdrawn at any time between 6 months - 9 months from time of original deposit.
 
-###About the Loopring Protocol
+### About the Loopring Protocol
 
 The Loopring Protocol is a decentralized automated execution system that trades across the crypto-token exchanges, shielding users from counterparty risk and reducing the cost of trading. By essentially raising the liquidity of cryptocurrencies, we are building the financial system of the future. Please visit our website for more info.
 
-##Disclaimer
+## Disclaimer
 
 Participation in these incentive programs is completely voluntary and the estimated interest rate of return is not guaranteed. By investing in the program, investors acknowledge and accept all risks associated with participating in a smart contract.
 
-##Smart Contract
+## Smart Contract
 The program will be executed through a smart contract on Ethereum network. The smart contract address is: `0x239dE3a0D6ca5f21601f83327eA2174225eB7156 `
 
 ENS address: `longterm.lrctoken.eth`
@@ -35,9 +35,9 @@ The smart contract code has been [etherscan verified](https://etherscan.io/addre
  7. There are no fees associated with participating in this program.
  8. The total number of LRC tokens deposited by investors will not be capped. Everyone is able to participate with the exception of Foundation members.
  
->The Loopring Foundation reserves the right of final decision on the interpretation of the program rules. Please be sure to review this page and its instructions carefully before participating in the program.
+> The Loopring Foundation reserves the right of final decision on the interpretation of the program rules. Please be sure to review this page and its instructions carefully before participating in the program.
 
-##Rate of Return and Bonus Distribution Explanation
+## Rate of Return and Bonus Distribution Explanation
 
 We estimate that 100 million tokens will be deposited into the long-term incentive program. Based on this estimation and a total of 5 million tokens deposited by the Foundation, there will be an estimated 5% rate of return.
 
@@ -50,9 +50,9 @@ In order to provide an additional long-term holding incentive, the rate of retur
 >Note: Individual rates of return will depend on the amount of tokens deposited and timing of withdrawal.
 
 
-#Instructions To Deposit Your LRC Tokens
+## Instructions To Deposit Your LRC Tokens
 
-##Step A) Authorize the LRC token transfer
+### Step A) Authorize the LRC token transfer
 
 The instructions below are for using MyEtherWallet, but you may also use the Ethereum official wallet to authorize the LRC token transfer.
 
@@ -105,7 +105,7 @@ The instructions below are for using MyEtherWallet, but you may also use the Eth
 
     ![Verify_Transaction_A](https://i.imgur.com/1wK1Msd.jpg)
 
-##Step B) Confirm the transfer authorization
+### Step B) Confirm the transfer authorization
 
 1. Visit the [LRC Smart Contract page](https://etherscan.io/token/0xEF68e7C694F40c8202821eDF525dE3782458639f#readContract "LRC Smart Contract").
 
@@ -117,7 +117,7 @@ The instructions below are for using MyEtherWallet, but you may also use the Eth
 
     ![SC_B](https://i.imgur.com/gALATUt.jpg)
 
-##Step C) Execute the LRC token transfer
+### Step C) Execute the LRC token transfer
 
 1. Open your [MyEtherWallet](https://www.myetherwallet.com/ "MyEtherWallet") and select the **Send Ether & Tokens** tab. Unlock your wallet.
 
@@ -142,9 +142,9 @@ The instructions below are for using MyEtherWallet, but you may also use the Eth
 
     ![Verify_Transaction_B](https://i.imgur.com/cLwNyFg.jpg)
 
-#Instructions To Withdraw Your LRC Tokens (after a minimum of 18 months)
+## Instructions To Withdraw Your LRC Tokens (after a minimum of 18 months)
 
-##Full Token Withdrawal
+### Full Token Withdrawal
 
 To withdraw the full amount LRC tokens deposited, simply send "0" Ether to the smart contract address `0x239dE3a0D6ca5f21601f83327eA2174225eB7156`.
 
@@ -154,7 +154,7 @@ Upon completing the transaction, the program will send your wallet address the o
 
 ![MEW_N](https://i.imgur.com/1AJGwLS.jpg)
 
-##Partial Token Withdrawal
+### Partial Token Withdrawal
 
 To withdraw a partial amount of tokens, you will need to send a calculated amount of Ether to the smart contract address. The smart contract will return your tokens based on the following formula where X represents the calculated amount of Ether.
 
@@ -164,7 +164,7 @@ To calculate the amount of Ether required for a partial withdrawal, use the form
 
 ![LRIP_Withdrawal_Example](https://i.imgur.com/aLw2QnH.jpg)
 
-###Example
+### Example
 If you originally deposited 1,000,000 tokens into the long-term program, but only wanted to withdraw 100,000 of them after 18 months, you would calculate [100,000/10,000,000 = .01] and send .01 ETH to the smart contract.
 
 >Note: We recommend that you use a Gas Limit of at least "90000" to ensure your transaction will be processed successfully. You must have some Ether in your wallet to pay for the Gas fee or your transfer will not be processed.
