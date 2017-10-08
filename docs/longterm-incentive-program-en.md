@@ -24,7 +24,7 @@ ENS address: `longterm.lrctoken.eth`
 
 The smart contract code has been [etherscan verified](https://etherscan.io/address/longterm.lrctoken.eth#code). We welcome volunteers from the community to further review the contract code.
 
-##Program Rules
+## Program Rules
 
  1. The long-term incentive program started on **August 30, 2017 - 18:00pm (Beijing time)**.
  2. The program's participation will be open for 60 days, ending on **October 29, 2017 - 18:00pm (Beijing time)**. Any tokens deposited after this time will be donated to the Loopring Foundation.
@@ -47,7 +47,7 @@ In order to provide an additional long-term holding incentive, the rate of retur
 
 ![LTIP_Return_Example_2](https://i.imgur.com/dwGgVeY.jpg)
 
->Note: Individual rates of return will depend on the amount of tokens deposited and timing of withdrawal.
+> Note: Individual rates of return will depend on the amount of tokens deposited and timing of withdrawal.
 
 
 ## Instructions To Deposit Your LRC Tokens
@@ -56,7 +56,7 @@ In order to provide an additional long-term holding incentive, the rate of retur
 
 The instructions below are for using MyEtherWallet, but you may also use the Ethereum official wallet to authorize the LRC token transfer.
 
->**CAUTION!** Follow the instructions carefully and DO NOT send your LRC tokens straight to the smart contract without first authorizing and confirming the transfer.
+> **CAUTION!** Follow the instructions carefully and DO NOT send your LRC tokens straight to the smart contract without first authorizing and confirming the transfer.
 
 1. Open your [MyEtherWallet](https://www.myetherwallet.com/ "MyEtherWallet") and select the **Contract** tab.
 
