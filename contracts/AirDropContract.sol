@@ -17,9 +17,6 @@
 */
 pragma solidity ^0.4.11;
 
-import 'zeppelin/math/SafeMath.sol';
-import 'tokens/contracts/Token.sol';
-
 /// @title LRC Foundation Icebox Program
 /// @author Daniel Wang - <daniel@loopring.org>.
 /// For more information, please visit https://loopring.org.
@@ -27,55 +24,65 @@ import 'tokens/contracts/Token.sol';
 /// Loopring Foundation's LRC (20% of total supply) will be locked during the first two years，
 /// two years later, 1/24 of all locked LRC fund can be unlocked every month.
 
+/// @title ERC20 ERC20 Interface
+/// @dev see https://github.com/ethereum/EIPs/issues/20
+/// @author Daniel Wang - <daniel@loopring.org>
+contract ERC20 {
+    uint public totalSupply;
+  
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+
+    function balanceOf(address who) view public returns (uint256);
+    function allowance(address owner, address spender) view public returns (uint256);
+    function transfer(address to, uint256 value) public returns (bool);
+    function transferFrom(address from, address to, uint256 value) public returns (bool);
+    function approve(address spender, uint256 value) public returns (bool);
+}
+
 contract AirDropContract {
-    using SafeMath for uint;
-    
-    address public constant lrcTokenAddress  = 0xEF68e7C694F40c8202821eDF525dE3782458639f;
-    uint public constant decimalfactor   = 1000000000000000000;
-    uint public constant maxDropAmount = 100;
 
-    /* 
-     * EVENTS
-     */
-
-    /// Emitted when program starts.
     event AirDropped(address addr, uint amount);
 
-    /*
-     * PUBLIC FUNCTIONS
-     */
-
     function drop(
+      address tokenAddress,
+      uint maxDropAmount,
+      uint amountMultiplier,
+      bool recipientShouldHaveZeroTokenBalance,
       address[] recipients,
       uint[]    amounts) public {
 
-      require(recipients.length == amounts.length);
+      require(tokenAddress != 0x0);
+      require(maxDropAmount > 0);
+      require(amountMultiplier > 0);
 
-      var lrc = Token(lrcTokenAddress);
+      uint size = recipients.length;
+      require(size == amounts.length);
 
-      uint balance = lrc.balanceOf(msg.sender);
-      uint allowance = lrc.allowance(msg.sender, address(this));
+      ERC20 token = ERC20(tokenAddress);
+
+      uint balance = token.balanceOf(msg.sender);
+      uint allowance = token.allowance(msg.sender, address(this));
       uint available = balance > allowance ? allowance : balance;
 
-      for (uint i = 0; i < recipients.length; i++) {
+      for (uint i = 0; i < size; i++) {
         address recipient = recipients[i];
-        require(recipient != 0x0);
+        require(recipient != 0x0 && recipient != msg.sender);
 
         uint amount = amounts[i];
         require(amount <= maxDropAmount && amount > 0);
 
-        if (lrc.balanceOf(recipient) == 0) {
-          uint realAmount = amount * decimalfactor;
-          require(available >= realAmount);
+        if (!recipientShouldHaveZeroTokenBalance || token.balanceOf(recipient) == 0) {
+          uint realAmount = amount * amountMultiplier;
+          if (available >= realAmount) {
+            available -= realAmount;
+            require(token.transferFrom(msg.sender, address(this), realAmount));
 
-          available -= realAmount;
-          require(lrc.transferFrom(msg.sender, address(this), realAmount));
-
-          AirDropped(recipient, amount);
+            AirDropped(recipient, amount);
+          }
         }
       }
     }
-
 
     function () payable {
         revert();
