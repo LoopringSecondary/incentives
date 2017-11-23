@@ -45,32 +45,70 @@ contract AirDropContract {
     event AirDropped(address addr, uint amount);
 
     function drop(
-      address tokenAddress,
-      uint amount,
-      address[] recipients) public {
+        address tokenAddress,
+        uint amount,
+        uint minTokenBalance,
+        uint maxTokenBalance,
+        uint minEthBalance,
+        uint maxEthBalance,
+        address[] recipients) public {
 
-      require(tokenAddress != 0x0);
-      require(amount > 0);
+        require(tokenAddress != 0x0);
+        require(amount > 0);
+        require(maxTokenBalance >= minTokenBalance);
+        require(maxEthBalance >= minEthBalance);
 
-      ERC20 token = ERC20(tokenAddress);
+        ERC20 token = ERC20(tokenAddress);
 
-      uint balance = token.balanceOf(msg.sender);
-      uint allowance = token.allowance(msg.sender, address(this));
-      uint available = balance > allowance ? allowance : balance;
+        uint balance = token.balanceOf(msg.sender);
+        uint allowance = token.allowance(msg.sender, address(this));
+        uint available = balance > allowance ? allowance : balance;
 
-      for (uint i = 0; i < recipients.length; i++) {
-        require(available >= amount);
+        for (uint i = 0; i < recipients.length; i++) {
+            require(available >= amount);
+            address recipient = recipients[i];
+            if (isQualitifiedAddress(
+                token,
+                recipient,
+                minTokenBalance,
+                maxTokenBalance,
+                minEthBalance,
+                maxEthBalance
+            )) {
+                available -= amount;
+                require(token.transferFrom(msg.sender, recipient, amount));
 
-        address recipient = recipients[i];
-        require(recipient != 0x0 && recipient != msg.sender);
-
-        if (token.balanceOf(recipient) == 0) {
-          available -= amount;
-          require(token.transferFrom(msg.sender, address(this), amount));
-
-          AirDropped(recipient, amount);
+                AirDropped(recipient, amount);
+            }
         }
-      }
+    }
+
+    function isQualitifiedAddress(
+        ERC20 token,
+        address addr,
+        uint minTokenBalance,
+        uint maxTokenBalance,
+        uint minEthBalance,
+        uint maxEthBalance
+        )
+        internal
+        returns (bool result)
+    {
+        result = addr != 0x0 && addr != msg.sender && !isContract(addr);
+
+        uint ethBalance = addr.balance;
+        uint tokenBbalance = token.balanceOf(addr);
+
+        result = result && (ethBalance>= minEthBalance &&
+            ethBalance <= maxEthBalance &&
+            tokenBbalance >= minTokenBalance &&
+            tokenBbalance <= maxTokenBalance);
+    }
+
+    function isContract(address addr) internal returns (bool) {
+        uint size;
+        assembly { size := extcodesize(addr) }
+        return size > 0;
     }
 
     function () payable {
