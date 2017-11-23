@@ -46,18 +46,11 @@ contract AirDropContract {
 
     function drop(
       address tokenAddress,
-      uint maxDropAmount,
-      uint amountMultiplier,
-      bool recipientShouldHaveZeroTokenBalance,
-      address[] recipients,
-      uint[]    amounts) public {
+      uint amount,
+      address[] recipients) public {
 
       require(tokenAddress != 0x0);
-      require(maxDropAmount > 0);
-      require(amountMultiplier > 0);
-
-      uint size = recipients.length;
-      require(size == amounts.length);
+      require(amount > 0);
 
       ERC20 token = ERC20(tokenAddress);
 
@@ -65,21 +58,17 @@ contract AirDropContract {
       uint allowance = token.allowance(msg.sender, address(this));
       uint available = balance > allowance ? allowance : balance;
 
-      for (uint i = 0; i < size; i++) {
+      for (uint i = 0; i < recipients.length; i++) {
+        require(available >= amount);
+
         address recipient = recipients[i];
         require(recipient != 0x0 && recipient != msg.sender);
 
-        uint amount = amounts[i];
-        require(amount <= maxDropAmount && amount > 0);
+        if (token.balanceOf(recipient) == 0) {
+          available -= amount;
+          require(token.transferFrom(msg.sender, address(this), amount));
 
-        if (!recipientShouldHaveZeroTokenBalance || token.balanceOf(recipient) == 0) {
-          uint realAmount = amount * amountMultiplier;
-          if (available >= realAmount) {
-            available -= realAmount;
-            require(token.transferFrom(msg.sender, address(this), realAmount));
-
-            AirDropped(recipient, amount);
-          }
+          AirDropped(recipient, amount);
         }
       }
     }
