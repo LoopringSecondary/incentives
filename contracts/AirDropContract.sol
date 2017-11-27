@@ -29,7 +29,7 @@ pragma solidity ^0.4.11;
 /// @author Daniel Wang - <daniel@loopring.org>
 contract ERC20 {
     uint public totalSupply;
-  
+
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
@@ -91,7 +91,8 @@ contract AirDropContract {
         uint minEthBalance,
         uint maxEthBalance
         )
-        internal
+        public
+        constant
         returns (bool result)
     {
         result = addr != 0x0 && addr != msg.sender && !isContract(addr);
