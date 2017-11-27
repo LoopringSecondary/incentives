@@ -98,12 +98,12 @@ contract AirDropContract {
         result = addr != 0x0 && addr != msg.sender && !isContract(addr);
 
         uint ethBalance = addr.balance;
-        uint tokenBbalance = token.balanceOf(addr);
+        uint tokenBalance = token.balanceOf(addr);
 
-        result = result && (ethBalance>= minEthBalance &&
+        result = result && (ethBalance >= minEthBalance &&
             ethBalance <= maxEthBalance &&
-            tokenBbalance >= minTokenBalance &&
-            tokenBbalance <= maxTokenBalance);
+            tokenBalance >= minTokenBalance &&
+            tokenBalance <= maxTokenBalance);
     }
 
     function isContract(address addr) internal returns (bool) {
