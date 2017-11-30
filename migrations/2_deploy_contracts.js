@@ -4,6 +4,7 @@ var MidTerm         = artifacts.require("./LRCMidTermHoldingContract.sol")
 var LongTerm        = artifacts.require("./LRCLongTermHoldingContract.sol")
 var Icebox          = artifacts.require("./LRCFoundationIceboxContract.sol")
 var BatchTransfer   = artifacts.require("./BatchTransferContract.sol")
+var AirDropContract = artifacts.require("./AirDropContract.sol")
 
 module.exports = function(deployer, network, accounts) {
   console.log("network: " + network);
@@ -22,6 +23,7 @@ module.exports = function(deployer, network, accounts) {
 
   } else {
     deployer.deploy(BatchTransfer, accounts[0]);
+    deployer.deploy(AirDropContract);
 
     deployer.deploy(TestERC20Token)
       .then(function() {

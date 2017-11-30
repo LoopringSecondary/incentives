@@ -17,13 +17,15 @@
     "copyfiles": "^1.2.0",
     "dirty-chai": "^2.0.0",
     "typescript": "^2.2.2",
+    "truffle": "4.0.1",
+    "solc": "0.4.18",
     "web3-typescript-typings": "0.0.3"
   },
   "scripts": {
-    "transpile": "rm -rf ./transpiled; copyfiles ./build/**/* ./transpiled; tsc",
-    "test": "npm run transpile; truffle test",
-    "compile": "rm -rf build/contracts; truffle compile",
-    "migrate": "npm run transpile; truffle migrate",
+    "transpile": "rm -rf ./transpiled; copyfiles ./build/**/* ./transpiled; ./node_modules/.bin/tsc",
+    "test": "npm run transpile; ./node_modules/.bin/truffle test",
+    "compile": "rm -rf build/contracts; ./node_modules/.bin/truffle compile",
+    "migrate": "npm run transpile; ./node_modules/.bin/truffle migrate",
     "deploy": "npm run migrate --networkId 100 ",
     "testrpc": "./testrpc.sh --networkId 100"
   },
