@@ -15,7 +15,7 @@
   limitations under the License.
 
 */
-pragma solidity ^0.4.11;
+pragma solidity 0.4.18;
 
 /// @title LRC Foundation Icebox Program
 /// @author Daniel Wang - <daniel@loopring.org>.
@@ -91,8 +91,8 @@ contract AirDropContract {
         uint minEthBalance,
         uint maxEthBalance
         )
-        public
-        constant
+        internal
+        view
         returns (bool result)
     {
         result = addr != 0x0 && addr != msg.sender && !isContract(addr);
@@ -106,13 +106,13 @@ contract AirDropContract {
             tokenBalance <= maxTokenBalance);
     }
 
-    function isContract(address addr) internal returns (bool) {
+    function isContract(address addr) internal view returns (bool) {
         uint size;
         assembly { size := extcodesize(addr) }
         return size > 0;
     }
 
-    function () payable {
+    function () payable public {
         revert();
     }
 }
