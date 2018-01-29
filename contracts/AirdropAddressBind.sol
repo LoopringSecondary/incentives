@@ -38,6 +38,12 @@ contract AirdropAddressBind {
         AddressBinded(projectId, addr, msg.sender);
     }
 
+    function unbind(uint8 projectId)
+        external
+    {
+        delete addressBindingMap[msg.sender][projectId];
+    }
+
     function getBindingAddress(address owner, uint8 projectId) returns (string) {
         return addressBindingMap[owner][projectId];
     }
