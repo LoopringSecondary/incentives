@@ -20,31 +20,32 @@ pragma solidity 0.4.18;
 
 /// @title LRC Foundation Airdrop Address Binding Contract
 /// @author Kongliang Zhong - <kongliang@loopring.org>,
-contract AirdropAddressBind {
+contract LRxAirdropAddressBinding {
 
-    mapping(address => mapping(uint8 => string)) public addressBindingMap;
+    mapping(address => mapping(uint8 => string)) public bindings;
 
-    event AddressBinded(uint8 projectId, string addr, address sender);
+    event AddressesBound(address sender, uint8 projectId, string targetAddr);
+    event AddressesUnbound(msg.sender, projectId);
 
-    function bind(uint8 projectId, string addr)
+    // @projectId: 1=LRN, 2=LRQ
+    function bind(uint8 projectId, string targetAddr)
         external
     {
-        var bindings = addressBindingMap[msg.sender];
-        bytes memory existBinding = bytes(bindings[projectId]);
-        require(existBinding.length == 0);
-
-        addressBindingMap[msg.sender][projectId] = addr;
-
-        AddressBinded(projectId, addr, msg.sender);
+        require(projectId > 0);
+        bindings[msg.sender][projectId] = targetAddr;
+        AddressesBound(msg.sender, projectId, targetAddr);
     }
 
     function unbind(uint8 projectId)
         external
     {
-        delete addressBindingMap[msg.sender][projectId];
+        require(projectId > 0);
+        delete bindings[msg.sender][projectId];
+        AddressesUnbound(msg.sender, projectId);
     }
 
     function getBindingAddress(address owner, uint8 projectId) returns (string) {
-        return addressBindingMap[owner][projectId];
+        require(projectId > 0);
+        return bindings[owner][projectId];
     }
 }
