@@ -17,15 +17,16 @@
 */
 pragma solidity 0.4.18;
 
+import './Ownable.sol';
 
 /// @title LRC Foundation Airdrop Address Binding Contract
 /// @author Kongliang Zhong - <kongliang@loopring.org>,
-contract LRxAirdropAddressBinding {
-
+contract LRxAirdropAddressBinding is Ownable {
     mapping(address => mapping(uint8 => string)) public bindings;
+    mapping(uint8 => string) public projectNameMap;
 
     event AddressesBound(address sender, uint8 projectId, string targetAddr);
-    event AddressesUnbound(msg.sender, projectId);
+    event AddressesUnbound(address sender, uint8 projectId);
 
     // @projectId: 1=LRN, 2=LRQ
     function bind(uint8 projectId, string targetAddr)
@@ -44,8 +45,17 @@ contract LRxAirdropAddressBinding {
         AddressesUnbound(msg.sender, projectId);
     }
 
-    function getBindingAddress(address owner, uint8 projectId) returns (string) {
+    function getBindingAddress(address owner, uint8 projectId)
+        external
+        view
+        returns (string)
+    {
         require(projectId > 0);
         return bindings[owner][projectId];
     }
+
+    function setProjectName(uint8 id, string name) onlyOwner external {
+        projectNameMap[id] = name;
+    }
+
 }

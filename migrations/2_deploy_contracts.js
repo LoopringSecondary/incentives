@@ -1,10 +1,10 @@
-// var LoopringToken = artifacts.require("./LoopringToken.sol")
 var TestERC20Token  = artifacts.require("./TestERC20Token.sol")
 var MidTerm         = artifacts.require("./LRCMidTermHoldingContract.sol")
 var LongTerm        = artifacts.require("./LRCLongTermHoldingContract.sol")
 var Icebox          = artifacts.require("./LRCFoundationIceboxContract.sol")
 var BatchTransfer   = artifacts.require("./BatchTransferContract.sol")
 var AirDropContract = artifacts.require("./AirDropContract.sol")
+var LRxAirdropAddressBinding = artifacts.require("./LRxAirdropAddressBinding.sol")
 
 module.exports = function(deployer, network, accounts) {
   console.log("network: " + network);
@@ -24,6 +24,7 @@ module.exports = function(deployer, network, accounts) {
   } else {
     deployer.deploy(BatchTransfer, accounts[0]);
     deployer.deploy(AirDropContract);
+    deployer.deploy(LRxAirdropAddressBinding);
 
     deployer.deploy(TestERC20Token)
       .then(function() {
